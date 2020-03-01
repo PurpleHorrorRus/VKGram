@@ -12,7 +12,7 @@ export default {
         const { id, name: title, photo_50: photo } = group;
         return { id, title, photo };
     },
-    BuildMessage (item: any, out_read: number, in_read: number): MessageType {
+    BuildMessage (item: any, out_read: number = 0, in_read: number = 0): MessageType {
         return {
             attachments: item.attachments || [],
             id: item.id,
