@@ -1,0 +1,133 @@
+<template>
+    <div id="messages-page">
+        <div id="account-container">
+            <div id="back-container">
+                <i class="fas fa-arrow-left clickable" @click="Back" />
+            </diV>
+            <div id="avatar-container">
+                <img id="photo" :src="current.conversation.photo">
+            </div>
+            <div id="title-container">
+                <span v-text="current.conversation.title" />
+            </div>
+        </div>
+        <div id="messages-main">
+            <Message 
+                v-for="message of current.messages" 
+                :key="message.id" 
+                :message="message" 
+                :profile="Profile(message.from_id)" 
+            />
+        </div>
+        <div id="input-container">
+            <Input @send="Send" />
+        </div>
+    </div>
+</template>
+
+<script>
+import Message from "../../components/Conversations/Messages/Message";
+import Input from "~/components/Conversations/Messages/Input";
+import { mapGetters } from "vuex";
+
+import misc from "~/assets/misc";
+
+export default {
+    layout: "messages",
+    components: { Message, Input },
+    async asyncData ({ store, route }) {
+        const { id } = route.params;
+
+        const messages = store.getters["messages/Get"];
+        if (!messages[id]) {
+            const vk = store.getters["vk/GetVK"];
+            let { vkr: history } = await vk.call("messages.getHistory", { 
+                peer_id: id,
+                fields: "photo_50",
+                extended: 1
+            });
+            history = JSON.parse(JSON.stringify(history));
+            await store.dispatch("messages/Cache", { id, history });
+        }
+        store.commit("messages/SetCurrent", id);
+    },
+    computed: {
+        ...mapGetters({
+            vk: "vk/GetVK",
+            current: "messages/Current"
+        })
+    },
+    methods: {
+        Profile (from_id) {
+            const { profiles } = this.current;
+            const UserIndex = profiles.findIndex(p => p.id === Math.abs(from_id));
+            if (~UserIndex) return profiles[UserIndex];
+        },
+        Send (message) {
+            const random_id = misc.GetRandom(100000, 999999);
+            const { conversation } = this.current;
+            const { id } = conversation;
+            this.vk.post("messages.send", {
+                peer_id: id,
+                random_id,
+                message
+            });
+        },
+        Back () { return this.$router.replace("/"); }
+    }
+};
+</script>
+
+<style>
+#messages-page {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 40px 1fr minmax(40px, auto);
+    grid-template-areas: "account-container" "messages-main" "input-container";
+    height: 100%;
+}
+
+#account-container {
+    grid-area: account-container;
+    display: grid;
+    grid-template-columns: 40px 40px 1fr;
+    grid-template-rows: 1fr;
+    grid-template-areas: "back-container avatar-container title-container";
+    border-bottom: 1px solid rgb(66, 66, 66);
+    z-index: 1;
+}
+
+#back-container {
+    grid-area: back-container;
+    padding: 10px;
+}
+
+#avatar-container {
+    grid-area: avatar-container;
+    padding: 3px;
+}
+
+#avatar-container #photo {
+    width: 30px;
+    height: 30px;
+    border-radius: 50px;
+}
+
+#title-container {
+    grid-area: title-container;
+    padding-top: 10px;
+}
+
+#messages-main {
+    grid-area: messages-main;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 0;
+    padding: 5px;
+    height: 100%;
+}
+
+#input-container {
+    grid-area: input-container;
+}
+</style>

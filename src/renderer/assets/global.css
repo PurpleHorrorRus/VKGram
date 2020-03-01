@@ -1,0 +1,31 @@
+a { text-decoration: none; }
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: #0e0e0e;
+    border-radius: 0px 0px 0px 0px;
+}
+::-webkit-scrollbar-thumb {
+    background: rgb(46, 46, 46);
+    border-radius: 0px 0px 0px 0px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgb(37, 37, 37); }
+span, i, input { 
+    font-family: Roboto;
+    color: #fff;
+}
+
+i.clickable:hover { 
+    cursor: pointer; 
+    color: rgb(117, 117, 252);
+}
+
+.titlebar { grid-area: titlebar; }
+
+.main-container {
+    grid-area: main-container;
+    height: 100%;
+    overflow: auto; 
+}

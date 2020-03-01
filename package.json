@@ -1,0 +1,66 @@
+{
+  "name": "vkgramnuxt",
+  "version": "0.0.1",
+  "description": "VKGram is a client for VK that allows you to add and send custom stickers",
+  "main": "./dist/main/index.js",
+  "scripts": {
+    "dev": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=development node .electron-nuxt/index.js",
+    "build": "node .electron-nuxt/check-engines.js && cross-env-shell NODE_ENV=production node .electron-nuxt/index.js",
+    "test": "jest",
+    "lint": "node_modules/.bin/eslint --ext .js,.vue,.ts -f ./node_modules/eslint-friendly-formatter ./src",
+    "lint:fix": "yarn run lint -- --fix",
+    "preinstall": "node .electron-nuxt/check-engines.js",
+    "postinstall": "electron-builder install-app-deps & yarn run lint:fix"
+  },
+  "keywords": [],
+  "author": "Maxim <purplehorrorrus@gmail.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/michalzaq12/electron-nuxt/blob/master/README.md",
+  "engines": {
+    "node": ">=12.8.1"
+  },
+  "resolutions": {
+    "@types/node": "12.12.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-typescript": "^7.8.3",
+    "@fortawesome/fontawesome-free": "5.12.0",
+    "@nuxt/typescript-build": "0.5.6",
+    "@nuxtjs/eslint-config-typescript": "1.0.0",
+    "@xpda-dev/core": "^0.1.5",
+    "@xpda-dev/electron-builder": "^0.1.1",
+    "@xpda-dev/electron-launcher": "^0.1.1",
+    "@xpda-dev/webpack-step": "^0.1.2",
+    "babel-jest": "^25.1.0",
+    "browser-env": "3.3.0",
+    "cross-env": "7.0.0",
+    "deepmerge": "4.2.2",
+    "electron": "8.0.0",
+    "electron-builder": "22.3.2",
+    "electron-debug": "3.0.1",
+    "eslint": "5.16.0",
+    "eslint-friendly-formatter": "4.0.1",
+    "eslint-loader": "3.0.3",
+    "node-sass": "4.13.1",
+    "nuxt": "2.11.0",
+    "sass-loader": "8.0.2",
+    "typescript": "3.7.5",
+    "vue-devtools": "5.1.3",
+    "webpack": "4.41.5",
+    "webpack-node-externals": "1.7.2"
+  },
+  "dependencies": {
+    "@types/jest": "^25.1.2",
+    "bufferutil": "^4.0.1",
+    "css-loader": "^3.4.2",
+    "easyvk": "^2.5.11",
+    "file-loader": "^5.0.2",
+    "jest": "^25.1.0",
+    "url-loader": "^3.0.0",
+    "utf-8-validate": "^5.0.2",
+    "vue-loader": "^15.9.0",
+    "vue-textarea-autosize": "^1.1.1"
+  }
+}
