@@ -17,6 +17,9 @@ Then open ./config/ and rename file vk.example.json to vk.json. Open it and edit
 ``` bash
 # run
 yarn dev
+
+# tests
+yarn test
 ```
 
 ---
