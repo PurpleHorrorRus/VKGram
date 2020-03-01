@@ -6,7 +6,10 @@ let vk = null;
 
 beforeAll(async () => {
     let VKAuthData: object = misc.ReadJSON("./config/vk.json");
-    VKAuthData = Object.assign(VKAuthData, { session_file: "./config/.vksession" });
+    VKAuthData = Object.assign(VKAuthData, { 
+        session_file: "./config/.vksession",
+        api_v: "5.103"
+    });
     vk = await easyvk(VKAuthData);
 });
 
@@ -14,8 +17,8 @@ describe("Get History", () => {
     let history = null;
 
     beforeAll(async () => {
-        const { vkr: _history } = await vk.call("messages.getHistory", {
-            peer_id: 243263728,
+        const { vkr: _history } = await vk.call("messages.getHistory", { 
+            peer_id: 243263728, // Put here friend or conversation ID
             fields: "photo_50",
             extended: 1
         });
