@@ -41,14 +41,21 @@ export default {
         }
 
         if (history.profiles) {
-            if (!chat_settings && id > 0) conversation = this.BuildProfile(history.profiles[0], conversations);
+            if (!chat_settings && id > 0) {
+                const index = history.profiles.findIndex(p => p.id === id);
+                if (~index) conversation = this.BuildProfile(history.profiles[index], conversations);
+            }
             for (const profile of history.profiles) {
                 profiles = [...profiles, this.BuildProfile(profile)];
             }
         } 
 
         if (history.groups) {
-            if (!chat_settings && id < 0) conversation = this.BuildGroup(history.groups[0], conversations);
+            if (!chat_settings && id < 0) {
+                let index = 0;
+                if (history.groups.length > 1) index = history.groups.findIndex(g => Math.abs(g.id) === Math.abs(id));
+                if (~index) conversation = this.BuildGroup(history.groups[index], conversations);
+            }
             for (const group of history.groups) {
                 profiles = [...profiles, this.BuildGroup(group)];
             }
