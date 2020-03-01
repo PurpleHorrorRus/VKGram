@@ -8,7 +8,11 @@
                 <img id="photo" :src="current.conversation.photo">
             </div>
             <div id="title-container">
-                <span v-text="current.conversation.title" />
+                <span id="messages-title" v-text="current.conversation.title" />
+                <div v-if="current.conversation.last_seen" id="last-seen">
+                    <span id="messages-last-seen" v-text="last_seen.time" />
+                    <i v-if="last_seen.platform !== 2" class="fas fa-mobile-alt" />
+                </div>
             </div>
         </div>
         <div id="messages-main">
@@ -43,7 +47,7 @@ export default {
             const vk = store.getters["vk/GetVK"];
             let { vkr: history } = await vk.call("messages.getHistory", { 
                 peer_id: id,
-                fields: "photo_50",
+                fields: "photo_50,last_seen",
                 extended: 1
             });
             history = JSON.parse(JSON.stringify(history));
@@ -55,7 +59,11 @@ export default {
         ...mapGetters({
             vk: "vk/GetVK",
             current: "messages/Current"
-        })
+        }),
+        last_seen () {
+            const { time, platform } = this.current.conversation.last_seen;
+            return { time: misc.FormatTime(time), platform };
+        }
     },
     methods: {
         Profile (from_id) {
@@ -116,6 +124,12 @@ export default {
 #title-container {
     grid-area: title-container;
     padding-top: 10px;
+}
+
+#last-seen { display: inline-block; }
+#last-seen span, #last-seen i { 
+    color: rgb(110, 110, 110); 
+    font-size: 9pt;
 }
 
 #messages-main {
