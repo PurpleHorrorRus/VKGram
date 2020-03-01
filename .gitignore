@@ -1,3 +1,13 @@
+# Something
+.nuxt
+dist
+build/*
+!build/icons
+node_modules
+config/*
+!config/vk.example.json
+.gitignore
+
 # Logs
 logs
 *.log
