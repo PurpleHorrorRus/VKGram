@@ -11,7 +11,7 @@
                 <span id="messages-title" v-text="current.conversation.title" />
                 <div v-if="current.conversation.last_seen" id="last-seen">
                     <span id="messages-last-seen" v-text="last_seen.time" />
-                    <i v-if="last_seen.platform !== 2" class="fas fa-mobile-alt" />
+                    <i v-if="last_seen.platform === 4" class="fas fa-mobile-alt" />
                 </div>
             </div>
         </div>
