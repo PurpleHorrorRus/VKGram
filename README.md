@@ -2,7 +2,7 @@
 
 > VKGram is a messenger for VK that allows you to send custom stickers
 
-#### Install
+## Install
 
 ``` bash
 # clone repo
@@ -29,4 +29,4 @@ If you want to open Pull Request, make sure first you write code by my ESLint ru
 
 This project was generated with [electron-nuxt](https://github.com/michalzaq12/electron-nuxt) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://github.com/michalzaq12/electron-nuxt/blob/master/README.md).
 
-[EasyVK](https://github.com/ciricc/easyvk)
+Interaction with the VK API is performed using [EasyVK](https://github.com/ciricc/easyvk)
