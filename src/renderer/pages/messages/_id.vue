@@ -62,7 +62,6 @@ export default {
         }),
         last_seen () {
             const { time, platform } = this.current.conversation.last_seen;
-            console.log(platform);
             return { time: misc.FormatTime(time), platform };
         }
     },

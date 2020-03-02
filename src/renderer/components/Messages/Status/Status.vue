@@ -26,8 +26,7 @@ export default {
             current: "messages/Current"
         }),
         online () { return this.current.conversation.online === 1; }
-    },
-    mounted () { console.log(this.current.conversation); }
+    }
 };
 </script>
 
