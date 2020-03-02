@@ -8,7 +8,7 @@ function ReadJSON (dir: string) {
 }
 
 interface StateInterface {
-    vk: any | null,
+    vk: any | null
     longpoll: Object | null
 };
 
@@ -76,8 +76,9 @@ export default {
 
                     longpoll.on("friendOffline", data => {
                         const id = -data[1];
+                        const timestamp = data[3];
                         commit("conversations/SetOffline", id, { root: true });
-                        commit("messages/SetOffline", id, { root: true });
+                        commit("messages/SetOffline", { id, timestamp }, { root: true });
                     });
 
                     longpoll.on("error", () => dispatch("vk/LPConnect"));

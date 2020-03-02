@@ -38,8 +38,12 @@ export default {
                 state.messages[id].conversation.online_mobile = online_mobile;
             }
         },
-        SetOffline (state, id: number) {
+        SetOffline (state, { id, timestamp }) {
             if (state.messages[id]) {
+                state.messages[id].conversation.last_seen = {
+                    time: timestamp,
+                    platform: state.messages[id].conversation.online_mobile
+                };
                 state.messages[id].conversation.online = false;
                 state.messages[id].conversation.online_mobile = false;
             }
