@@ -70,8 +70,8 @@ export default {
                     longpoll.on("friendOnline", data => {
                         const id = -data[1];
                         const platform = data[2];
-                        commit("conversations/SetOnline", { id, online_mobile: platform }, { root: true });
-                        commit("messages/SetOnline", { id, online_mobile: platform }, { root: true });
+                        commit("conversations/SetOnline", { id, platform }, { root: true });
+                        commit("messages/SetOnline", { id, platform }, { root: true });
                     });
 
                     longpoll.on("friendOffline", data => {
