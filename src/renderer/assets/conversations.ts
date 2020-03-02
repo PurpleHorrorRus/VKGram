@@ -12,30 +12,34 @@ const attachmentsTypes = {
     gift: "Подарок",
     link: "Ссылка",
     audio_message: "Голосовое сообщение",
-    playlist: "Плейлист"
+    audio_playlist: "Плейлист"
 };
 
 export default {
     BuildConversationMessage (item: any, AppendName: string = "") {
         const { last_message } = item;
-        const { attachments, id, from_id, date, text: _t, out } = last_message;
-        let text = `<span class="message-body">${_t}</span>`;
-
+        const { attachments, id, from_id, date, text, out } = last_message;
+        let atts = [];
+        
         if (attachments) {
             if (attachments.length) { 
-                attachments.forEach(a => {
-                    const type = attachmentsTypes[a.type];
-                    return text = `<span class="conversation-attachment">${type}</span> ${text}`;
-                }); 
+                const counts = {};
+                attachments.map(x => x.type).forEach(x => counts[x] = (counts[x] || 0) + 1);
+
+                Object.keys(counts).forEach(e => {
+                    const count = counts[e];
+                    const writeCount = count !== 1 ? count : "";
+                    return atts = [...atts, `${writeCount} ${attachmentsTypes[e]}`];
+                });
             } 
         }
-
-        if (AppendName) text = `<span class="chat-name">${AppendName}:</span> ${text}`; 
 
         const message: ConversationMessageType = {
             id,
             from_id,
             date,
+            append_name: AppendName,
+            attachments: atts,
             text,
             out
         };

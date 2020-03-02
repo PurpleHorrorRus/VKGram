@@ -13,7 +13,15 @@
         <div class="content-area">
             <div class="content-area-info">
                 <span class="converstaion-title" v-text="conversation.title" />
-                <span class="conversation-message" v-html="conversation.message.text" /> 
+                <span v-if="conversation.message.append_name" 
+                      class="chat-name" 
+                      v-text="conversation.message.append_name" 
+                />
+                <span v-if="conversation.message.attachments.length" 
+                      class="conversation-attachments" 
+                      v-text="formatAttachments" 
+                />
+                <span class="conversation-message" v-text="conversation.message.text" /> 
             </div>
         </div>
         <div class="info-area">
@@ -38,7 +46,8 @@ export default {
         isUnread () { return this.isUnreadIn || this.isUnreadOut; },
         isUnreadIn () { return this.conversation.unread_count !== 0; },
         isUnreadOut () { return this.conversation.out_read !== this.conversation.msg_id; },
-        time () { return misc.FormatTime(this.conversation.message.date); }
+        time () { return misc.FormatTime(this.conversation.message.date); },
+        formatAttachments () { return this.conversation.message.attachments.join(", "); }
     },
     methods: {
         open () {
@@ -124,13 +133,20 @@ export default {
 }
 
 .conversation-message {
-    display: block;
+    display: inline-block;
     width: max-content;
     max-width: 100%;
 }
 
+.conversation-attachments {
+    display: inline-block;
+    color: rgb(91, 169, 233);
+    max-width: 100;
+    width: max-content;
+}
+
 .chat-name {
-    display: inline;
+    display: inline-block;
     color: #ccc;
 }
 
