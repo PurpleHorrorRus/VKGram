@@ -4,9 +4,9 @@ import { CacheObjectType } from "~/types/Messages/CacheObjectType";
 
 export default {
     BuildProfile (profile: any): CacheProfileType {
-        const { id, photo_50: photo, last_seen } = profile;
+        const { id, photo_50: photo, online, last_seen } = profile;
         const title: string = `${profile.first_name} ${profile.last_name}`;
-        return { id, title, photo, last_seen };
+        return { id, title, photo, online, last_seen };
     },
     BuildGroup (group: any): CacheProfileType {
         const { id, name: title, photo_50: photo } = group;

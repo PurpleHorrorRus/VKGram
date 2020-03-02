@@ -10,8 +10,7 @@
             <div id="title-container">
                 <span id="messages-title" v-text="current.conversation.title" />
                 <div v-if="current.conversation.last_seen" id="last-seen">
-                    <span id="messages-last-seen" v-text="last_seen.time" />
-                    <i v-if="last_seen.platform === 4" class="fas fa-mobile-alt" />
+                    <Status :lastSeen="last_seen" />
                 </div>
             </div>
         </div>
@@ -30,15 +29,16 @@
 </template>
 
 <script>
-import Message from "../../components/Conversations/Messages/Message";
-import Input from "~/components/Conversations/Messages/Input";
+import Message from "~/components/Messages/Message";
+import Input from "~/components/Messages/Input";
+import Status from "~/components/Messages/Status/Status";
 import { mapGetters } from "vuex";
 
 import misc from "~/assets/misc";
 
 export default {
     layout: "messages",
-    components: { Message, Input },
+    components: { Message, Input, Status },
     async asyncData ({ store, route }) {
         const { id } = route.params;
 
@@ -47,7 +47,7 @@ export default {
             const vk = store.getters["vk/GetVK"];
             let { vkr: history } = await vk.call("messages.getHistory", { 
                 peer_id: id,
-                fields: "photo_50,last_seen",
+                fields: "photo_50,online,last_seen",
                 extended: 1
             });
             history = JSON.parse(JSON.stringify(history));
@@ -62,6 +62,7 @@ export default {
         }),
         last_seen () {
             const { time, platform } = this.current.conversation.last_seen;
+            console.log(platform);
             return { time: misc.FormatTime(time), platform };
         }
     },
@@ -126,11 +127,14 @@ export default {
     padding-top: 10px;
 }
 
-#last-seen { display: inline-block; }
-#last-seen span, #last-seen i { 
-    color: rgb(110, 110, 110); 
-    font-size: 9pt;
+#messages-title { vertical-align: middle; }
+#last-seen { 
+    display: inline-block;  
+    margin-left: 5px;
+    vertical-align: middle;
 }
+
+#last-seen span, #last-seen i { font-size: 9pt; }
 
 #messages-main {
     grid-area: messages-main;
