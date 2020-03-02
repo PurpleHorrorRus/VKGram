@@ -6,4 +6,5 @@ export type ConversationMessageType = {
     attachments: Array<String>
     text: string
     out: boolean
+    read_state: boolean
 } | null;

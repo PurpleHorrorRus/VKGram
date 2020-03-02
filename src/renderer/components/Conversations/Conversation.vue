@@ -50,7 +50,12 @@ export default {
     computed: {
         isUnread () { return this.isUnreadIn || this.isUnreadOut; },
         isUnreadIn () { return this.conversation.unread_count !== 0; },
-        isUnreadOut () { return this.conversation.out_read !== this.conversation.msg_id; },
+        isUnreadOut () { 
+            const { message } = this.conversation;
+            const { out, read_state } = message;
+            console.log(message);
+            return out && !read_state; 
+        },
         time () { return misc.FormatTime(this.conversation.message.date); },
         formatAttachments () { return this.conversation.message.attachments.join(", "); }
     },

@@ -17,10 +17,16 @@ const attachmentsTypes = {
 
 export default {
     BuildConversationMessage (item: any, AppendName: string = "") {
-        const { last_message } = item;
+        const { conversation, last_message } = item;
         const { attachments, id, from_id, date, text, out } = last_message;
         let atts = [];
-        
+
+        let read_state = false;
+        if (conversation) {
+            const { last_message_id, out_read } = conversation;
+            read_state = last_message_id === out_read;
+        }
+
         if (attachments) {
             if (attachments.length) { 
                 const counts = {};
@@ -41,7 +47,8 @@ export default {
             append_name: AppendName,
             attachments: atts,
             text,
-            out
+            out,
+            read_state
         };
         return message;
     },
