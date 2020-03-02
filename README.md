@@ -9,7 +9,7 @@
 git clone https://github.com/PurpleHorrorRus/VKGram
 
 # install dependencies
-yarn install
+yarn
 ```
 
 Then open ./config/ and rename file vk.example.json to vk.json. Open it and edit, put your username and password.
