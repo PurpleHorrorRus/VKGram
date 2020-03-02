@@ -114,6 +114,7 @@ export default {
 #avatar-container {
     grid-area: avatar-container;
     padding: 3px;
+    user-select: none;
 }
 
 #avatar-container #photo {
@@ -125,6 +126,7 @@ export default {
 #title-container {
     grid-area: title-container;
     padding-top: 10px;
+    user-select: none;
 }
 
 #messages-title { vertical-align: middle; }
