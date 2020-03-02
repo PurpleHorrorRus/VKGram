@@ -70,12 +70,14 @@ export default {
                     longpoll.on("friendOnline", data => {
                         const id = -data[1];
                         const platform = data[2];
-                        return commit("conversations/SetOnline", { id, online_mobile: platform }, { root: true });
+                        commit("conversations/SetOnline", { id, online_mobile: platform }, { root: true });
+                        commit("messages/SetOnline", { id, online_mobile: platform }, { root: true });
                     });
 
                     longpoll.on("friendOffline", data => {
                         const id = -data[1];
-                        return commit("conversations/SetOffline", id, { root: true });
+                        commit("conversations/SetOffline", id, { root: true });
+                        commit("messages/SetOffline", id, { root: true });
                     });
 
                     longpoll.on("error", () => dispatch("vk/LPConnect"));
