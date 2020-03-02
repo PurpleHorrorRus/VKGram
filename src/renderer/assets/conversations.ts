@@ -64,7 +64,7 @@ export default {
                 const profile = profiles[ProfileIndex];
                 const { first_name, last_name, photo_50, online: _o, online_mobile: _m } = profile;
                 online = _o === 1;
-                online_mobile = _m === 1;
+                online_mobile = _m || 7;
                 title = `${first_name} ${last_name}`;
                 photo = photo_50;
             }

@@ -1,8 +1,12 @@
 <template>
-    <div v-if="isWeb && online" id="online-circle" />
-    <i v-else-if="isApple" class="fab fa-apple" />
-    <i v-else-if="isAndroid" class="fab fa-android" />
-    <i v-else class="fa fa-mobile-alt" />
+    <div 
+        v-if="isWeb && online" 
+        id="online-circle" 
+        :class="{ online }"
+    />
+    <i v-else-if="isApple" :class="{ online }" class="fab fa-apple" />
+    <i v-else-if="isAndroid" :class="{ online }" class="fab fa-android" />
+    <i v-else :class="{ online }" class="fa fa-mobile-alt" />
 </template>
 
 <script>
@@ -28,12 +32,15 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+i { font-size: 9pt; }
+.online { color: rgb(128, 255, 185); }
 #online-circle {
     display: inline-block;
     width: 5px;
     height: 5px;
-    background:rgb(128, 255, 185);
+    background: rgb(128, 255, 185);
     border-radius: 50px;
+    vertical-align: middle;
 }
 </style>

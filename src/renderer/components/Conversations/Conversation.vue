@@ -1,10 +1,11 @@
 <template>
     <div class="conversation" @click="open">
         <div class="avatar-area">
-            <div v-if="conversation.online > 0" class="conversation-online">
-                <div v-if="!conversation.online_mobile" class="online-round" />
-                <i v-else class="fa fa-mobile-alt" />
-            </div>
+            <StatusIcons 
+                v-if="conversation.online" 
+                :online="conversation.online" 
+                :platform="conversation.online_mobile" 
+            />
             <img class="conversation-photo" :src="conversation.photo">
             <div v-if="isUnreadIn" class="conversation-unread-count">
                 <span class="conversation-unread-count-label" v-text="conversation.unread_count" />
@@ -36,8 +37,10 @@
 </template>
 
 <script>
+import StatusIcons from "~/components/Messages/Status/StatusIcons";
 import misc from "~/assets/misc";
 export default {
+    components: { StatusIcons },
     props: {
         conversation: {
             type: Object,
@@ -78,9 +81,15 @@ export default {
 .avatar-area { 
     grid-area: avatar-area; 
     display: inline-block;
+    position: relative;
 }
 
-.conversation-online {
+.avatar-area #online-circle, .avatar-area i {
+    position: absolute;
+    bottom: 0px;
+}
+
+/* .conversation-online {
     position: relative;
     display: block;
 }
@@ -94,15 +103,15 @@ export default {
     height: 5px;
     border-radius: 50px;
     top: 35px;
-}
+} */
 
-.conversation-online i {
+/* .conversation-online i {
     font-size: 7pt;
     top: 30px;
     height: 10px;
     background: none;
     color: rgb(0, 212, 149);
-}
+} */
 
 .content-area { 
     grid-area: content-area; 
