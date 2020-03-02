@@ -34,14 +34,14 @@ export default {
         },
         SetOnline (state, { id, online_mobile }) {
             if (state.messages[id]) {
-                state.messages[id].profile.online = true;
-                state.messages[id].profile.online_mobile = online_mobile;
+                state.messages[id].conversation.online = true;
+                state.messages[id].conversation.online_mobile = online_mobile;
             }
         },
         SetOffline (state, id: number) {
             if (state.messages[id]) {
-                state.messages[id].profile.online = false;
-                state.messages[id].profile.online_mobile = false;
+                state.messages[id].conversation.online = false;
+                state.messages[id].conversation.online_mobile = false;
             }
         }
     },
