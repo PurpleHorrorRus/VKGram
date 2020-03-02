@@ -89,30 +89,6 @@ export default {
     bottom: 0px;
 }
 
-/* .conversation-online {
-    position: relative;
-    display: block;
-}
-
-.conversation-online .online-round, .conversation-online i {
-    position: absolute;
-    bottom: 10px;
-    left: 5px;
-    background: rgb(0, 212, 149);
-    width: 5px;
-    height: 5px;
-    border-radius: 50px;
-    top: 35px;
-} */
-
-/* .conversation-online i {
-    font-size: 7pt;
-    top: 30px;
-    height: 10px;
-    background: none;
-    color: rgb(0, 212, 149);
-} */
-
 .content-area { 
     grid-area: content-area; 
     display: inline-block;
