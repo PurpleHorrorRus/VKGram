@@ -30,7 +30,7 @@ export default {
                 const UserIndex = conversations.findIndex(c => c.id === id);
                 if (~UserIndex) {
                     state.conversations[UserIndex].online = true;
-                    state.conversations[UserIndex].online_mobile = online_mobile;
+                    state.conversations[UserIndex].online_mobile = online_mobile === 1;
                     console.log("User Online", state.conversations[UserIndex]);
                 }
             }
