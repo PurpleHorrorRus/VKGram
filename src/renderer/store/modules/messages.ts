@@ -50,6 +50,7 @@ export default {
         }
     },
     actions: {
+        AddMessage ({ commit }, data) { return commit("AddMessage", data); },
         Cache ({ commit }, { id, history }) {
             return new Promise(async (resolve, reject) => {
                 /*

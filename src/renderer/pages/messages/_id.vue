@@ -14,7 +14,7 @@
                 </div>
             </div>
         </div>
-        <div id="messages-main">
+        <div id="messages-main" ref="msgs">
             <Message 
                 v-for="message of current.messages" 
                 :key="message.id" 
@@ -32,7 +32,7 @@
 import Message from "~/components/Messages/Message";
 import Input from "~/components/Messages/Input";
 import Status from "~/components/Messages/Status/Status";
-import { mapGetters } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 import misc from "~/assets/misc";
 
@@ -53,7 +53,10 @@ export default {
             history = JSON.parse(JSON.stringify(history));
             await store.dispatch("messages/Cache", { id, history });
         }
+
         store.commit("messages/SetCurrent", id);
+
+        return { loading_messages: false };
     },
     computed: {
         ...mapGetters({
@@ -65,7 +68,19 @@ export default {
             return { time: misc.FormatTime(time), platform };
         }
     },
+    watch: {
+        // eslint-disable-next-line object-shorthand
+        "current.messages": function (newVal) {
+            const { out } = newVal[newVal.length - 1];
+            if (out === 1) return this.ScrollToEnd(true);
+        }
+    },
+    updated () { return this.$nextTick(() => this.ScrollToEnd()); },
+    mounted () { return this.$refs.msgs.addEventListener("scroll", this.HandleScroll); },
     methods: {
+        ...mapActions({
+            AddMessage: "messages/AddMessage"
+        }),
         Profile (from_id) {
             const { profiles } = this.current;
             const UserIndex = profiles.findIndex(p => p.id === Math.abs(from_id));
@@ -74,14 +89,40 @@ export default {
         Send (message) {
             const random_id = misc.GetRandom(100000, 999999);
             const { conversation } = this.current;
-            const { id } = conversation;
+            const { id } = conversation;    
             this.vk.post("messages.send", {
                 peer_id: id,
                 random_id,
                 message
-            });
+            }); 
         },
-        Back () { return this.$router.replace("/"); }
+        Back () { return this.$router.replace("/"); },
+        async HandleScroll () {
+            const scrollY = this.$refs.msgs.scrollTop;
+            if (scrollY <= 500 && !this.loading_messages) {
+                this.loading_messages = true;
+
+                const { length: offset } = this.current.messages; 
+
+                const { id } = this.current.conversation;
+
+                const params = { user_id: id, offset, extended: 1, fields: "photo_50" };
+                const { vkr } = await this.vk.post("messages.getHistory", params);
+
+                for (const msg of vkr.items) {
+                    this.AddMessage({ id, message: msg, toStart: true });
+                }
+
+                return this.loading_messages = false;
+            }
+        },
+        ScrollToEnd (force = false) {
+            const scrollY = this.$refs.msgs.scrollTop;
+            const height = this.$refs.msgs.scrollHeight;
+            if ((height - scrollY < 600 || force) && !this.loading_messages) { 
+                return this.$refs.msgs.scrollTop = this.$refs.msgs.lastElementChild.offsetTop;
+            }
+        }
     }
 };
 </script>
