@@ -57,7 +57,7 @@ export default {
                         const to: number = data[3];
 
                         const { items } = await getMessage(message_id);
-                        const item: object = { last_message: items[0] };
+                        const item: object = { last_message: Object.assign(items[0], { read_state: false }) };
 
                         commit("conversations/SetMessage", { id: to, item }, { root: true });
                         commit("conversations/Move", to, { root: true });
