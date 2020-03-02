@@ -4,7 +4,7 @@ import { CacheObjectType } from "~/types/Messages/CacheObjectType";
 import m_scripts from "~/assets/messages";
 
 interface StateInterface {
-    messages: Array<CacheType>,
+    messages: Array<CacheType>
     current: CacheObjectType | object
 }
 
