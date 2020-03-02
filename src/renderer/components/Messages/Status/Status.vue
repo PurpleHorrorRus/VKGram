@@ -1,10 +1,10 @@
 <template>
-    <div v-if="!current.conversation.online" id="status-offline">
+    <div v-if="!online" id="status-offline">
         <span id="messages-last-seen" v-text="lastSeen.time" />
-        <StatusIcons :platform="lastSeen.platform" />
+        <StatusIcons :online="online" :platform="lastSeen.platform" />
     </div>
     <div v-else id="status-online">
-        <StatusIcons :platform="lastSeen.platform" />
+        <StatusIcons :online="online" :platform="lastSeen.platform" />
     </div>
 </template>
 
@@ -24,8 +24,10 @@ export default {
     computed: {
         ...mapGetters({
             current: "messages/Current"
-        })
-    }
+        }),
+        online () { return this.current.conversation.online === 1; }
+    },
+    mounted () { console.log(this.current.conversation); }
 };
 </script>
 

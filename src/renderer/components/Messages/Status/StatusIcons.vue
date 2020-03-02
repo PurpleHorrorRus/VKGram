@@ -1,17 +1,29 @@
 <template>
-    <div v-if="platform === 1" id="online-circle" />
-    <i v-else-if="platform === 2" class="fab fa-apple" />
-    <i v-else-if="platform === 4" class="fab fa-android" />
+    <div v-if="isWeb && online" id="online-circle" />
+    <i v-else-if="isApple" class="fab fa-apple" />
+    <i v-else-if="isAndroid" class="fab fa-android" />
     <i v-else class="fa fa-mobile-alt" />
 </template>
 
 <script>
+import misc from "~/assets/misc";
+
 export default {
     props: {
         platform: {
             type: Number,
             required: true
+        },
+        online: {
+            type: Boolean,
+            required: false,
+            default: false
         }
+    },
+    computed: {
+        isApple () { return ~misc.platforms.apple.indexOf(this.platform); },
+        isAndroid () { return ~misc.platforms.android.indexOf(this.platform); },
+        isWeb () { return ~misc.platforms.web.indexOf(this.platform); }
     }
 };
 </script>

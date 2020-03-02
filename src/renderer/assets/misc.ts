@@ -1,6 +1,12 @@
 import { readFileSync } from "fs";
 
 export default {
+    platforms: { // https://vk.com/dev/using_longpoll_2?f=7.+Platforms
+        mobile: [1, 5],
+        apple: [2, 3],
+        android: [4],
+        web: [6, 7]
+    },
     ReadJSON (path: string): object {
         const content: string = readFileSync(path, "UTF-8");
         try {

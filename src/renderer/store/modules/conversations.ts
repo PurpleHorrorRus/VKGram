@@ -24,13 +24,13 @@ export default {
                 state.conversations[ConversationIndex].message = build;
             }
         },
-        SetOnline (state, { id, online_mobile }) {
+        SetOnline (state, { id, platform }) {
             const conversations: any = state.conversations;
             if (conversations.length) {
                 const UserIndex = conversations.findIndex(c => c.id === id);
                 if (~UserIndex) {
                     state.conversations[UserIndex].online = true;
-                    state.conversations[UserIndex].online_mobile = online_mobile === 1;
+                    state.conversations[UserIndex].online_mobile = platform;
                     console.log("User Online", state.conversations[UserIndex]);
                 }
             }
