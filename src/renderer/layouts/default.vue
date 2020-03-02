@@ -28,6 +28,7 @@ html, body, #__nuxt, #__vkgram, #__layout, #__app {
   background: $base-color;
   margin: 0 !important;
   overflow: hidden;
+  z-index: 0;
 }
 
 #__vkgram {

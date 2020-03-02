@@ -9,7 +9,7 @@ module.exports = {
     head: {
         title: "vkgramnuxt"
     },
-    loading: false,
+    loading: "components/loading.vue",
     css: ["~/assets/global.css"],
     plugins: [
         { ssr: true, src: "~/plugins/icons.js" },
