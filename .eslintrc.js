@@ -36,6 +36,7 @@ module.exports = {
         "no-trailing-spaces": 0,
         "vue/html-indent": ["warn", 4],
         "camelcase": 0,
-        "no-return-assign": 0
+        "no-return-assign": 0,
+        "vue/attribute-hyphenation": 0
   }
 }
