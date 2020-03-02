@@ -21,7 +21,7 @@ export default {
             text: item.body || item.text,
             fwd_messages: item.fwd_messages || [],
             out: item.out || 0,
-            read_state: item.read_state || item.out ? item.id <= out_read : item.id <= in_read
+            read_state: item.read_state || item.out ? item.id <= in_read : item.id <= out_read
         };
     },
     BuildHistory (history: any): CacheObjectType {
