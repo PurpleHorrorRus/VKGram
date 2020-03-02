@@ -31,6 +31,18 @@ export default {
                 if (!toStart) state.messages[id].messages = [...state.messages[id].messages, build];
                 else state.messages[id].messages = [build, ...state.messages[id].messages];
             }
+        },
+        SetOnline (state, { id, online_mobile }) {
+            if (state.messages[id]) {
+                state.messages[id].profile.online = true;
+                state.messages[id].profile.online_mobile = online_mobile;
+            }
+        },
+        SetOffline (state, id: number) {
+            if (state.messages[id]) {
+                state.messages[id].profile.online = false;
+                state.messages[id].profile.online_mobile = false;
+            }
         }
     },
     actions: {

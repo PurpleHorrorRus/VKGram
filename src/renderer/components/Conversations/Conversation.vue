@@ -13,15 +13,17 @@
         <div class="content-area">
             <div class="content-area-info">
                 <span class="converstaion-title" v-text="conversation.title" />
-                <span v-if="conversation.message.append_name" 
-                      class="chat-name" 
-                      v-text="conversation.message.append_name" 
-                />
-                <span v-if="conversation.message.attachments.length" 
-                      class="conversation-attachments" 
-                      v-text="formatAttachments" 
-                />
-                <span class="conversation-message" v-text="conversation.message.text" /> 
+                <div class="conversation-message-block">
+                    <span v-if="conversation.message.append_name" 
+                          class="chat-name" 
+                          v-text="conversation.message.append_name" 
+                    />
+                    <span v-if="conversation.message.attachments.length" 
+                          class="conversation-attachments" 
+                          v-text="formatAttachments" 
+                    />
+                    <span class="conversation-message" v-text="conversation.message.text" />
+                </div>
             </div>
         </div>
         <div class="info-area">
@@ -130,6 +132,13 @@ export default {
     display: block;
     width: max-content;
     max-width: 100%;
+}
+
+.conversation-message-block {
+    display: block;
+    max-width: 95%;
+    width: max-content;
+    white-space: nowrap;
 }
 
 .conversation-message {
