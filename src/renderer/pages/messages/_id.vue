@@ -113,6 +113,9 @@ export default {
                 this.AddMessage({ id, message: msg, toStart: true });
             }
 
+            const scrollY = this.$refs.msgs.scrollTop;
+            if (scrollY === 0) this.$refs.msgs.scrollTop += 100;
+
             return setTimeout(() => this.loading_messages = false, 200);
         },
         HandleScroll () {
@@ -126,7 +129,8 @@ export default {
             const handle = 600;
             const _h = height - scrollY;
             if (_h < handle || force) { 
-                return this.$refs.msgs.scrollTop = this.$refs.msgs.lastElementChild.offsetTop;
+                const offset = this.$refs.msgs.lastElementChild.offsetTop;
+                return this.$refs.msgs.scrollTop = offset;
             }
         }
     }
