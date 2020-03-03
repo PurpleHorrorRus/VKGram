@@ -141,7 +141,6 @@ export default {
 }
 
 #stickers { 
-    position: relative;
     grid-area: stickers;
     width: 100%;
     overflow-y: auto;
@@ -166,7 +165,7 @@ export default {
 #sticker-full img {
     margin: auto;
     width: auto;
-    height: 100%;
+    height: 65%;
 }
 
 #sticker-current-label {
