@@ -82,7 +82,8 @@ export default {
     },
     methods: {
         ...mapActions({
-            AddMessage: "messages/AddMessage"
+            AddMessage: "messages/AddMessage",
+            Cache: "messages/Cache"
         }),
         Profile (from_id) {
             const { profiles } = this.current;
@@ -107,11 +108,14 @@ export default {
             const { id } = this.current.conversation;
 
             const params = { user_id: id, offset, extended: 1, fields: "photo_50" };
-            const { vkr } = await this.vk.post("messages.getHistory", params);
+            let { vkr: history } = await this.vk.post("messages.getHistory", params);
+            history = JSON.parse(JSON.stringify(history));
+
+            this.Cache({ id, history });
 
             const { out_read, in_read } = this.current.conversation;
 
-            for (const msg of vkr.items) {
+            for (const msg of history.items) {
                 this.AddMessage({ id, message: msg, toStart: true, out_read, in_read });
             }
 
