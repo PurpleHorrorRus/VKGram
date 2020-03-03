@@ -60,7 +60,7 @@ export default {
 
 .stickers-category:hover {
     cursor: pointer;
-    background: #ccc;
+    background: rgb(46, 46, 46);
 }
 
 .sticker-category-preview {

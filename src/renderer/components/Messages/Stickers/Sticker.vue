@@ -87,7 +87,7 @@ export default {
 
 .sticker:hover {
     cursor: pointer;
-    background: #ccc;
+    background: rgb(46, 46, 46);
 }
 
 .sticker-image {
