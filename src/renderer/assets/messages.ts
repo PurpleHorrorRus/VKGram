@@ -21,7 +21,6 @@ export default {
         return { id, title, photo };
     },
     BuildMessage (item: any, out_read: number = 0, in_read: number = 0): MessageType {
-        // console.log(item.id, in_read, out_read, item.body || item.text);
         return {
             attachments: item.attachments || [],
             id: item.id,
