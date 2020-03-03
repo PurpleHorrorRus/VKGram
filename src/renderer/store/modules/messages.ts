@@ -25,9 +25,9 @@ export default {
                 state.current = state.messages[id];
             }
         },
-        AddMessage (state, { id, message, toStart = false }) {
+        AddMessage (state, { id, message, toStart = false, out_read = 0, in_read = 0 }) {
             if (state.messages[id]) {
-                const build = m_scripts.BuildMessage(message);
+                const build = m_scripts.BuildMessage(message, Number(out_read), Number(in_read));
                 if (!toStart) state.messages[id].messages = [...state.messages[id].messages, build];
                 else state.messages[id].messages = [build, ...state.messages[id].messages];
             }

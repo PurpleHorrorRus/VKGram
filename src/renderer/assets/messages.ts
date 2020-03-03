@@ -3,6 +3,14 @@ import { MessageType } from "~/types/Messages/MessageType";
 import { CacheObjectType } from "~/types/Messages/CacheObjectType";
 
 export default {
+    BuildConversation (object: any, conversations: any): CacheProfileType {
+        const { id } = object;
+        const conversation: CacheProfileType = id > 0 ? this.BuildProfile(object) : this.BuildGroup(object);
+        return Object.assign(conversation, {
+            out_read: conversations.out_read,
+            in_read: conversations.in_read
+        });
+    },
     BuildProfile (profile: any): CacheProfileType {
         const { id, photo_50: photo, online, last_seen } = profile;
         const title: string = `${profile.first_name} ${profile.last_name}`;
@@ -13,6 +21,7 @@ export default {
         return { id, title, photo };
     },
     BuildMessage (item: any, out_read: number = 0, in_read: number = 0): MessageType {
+        // console.log(item.id, in_read, out_read, item.body || item.text);
         return {
             attachments: item.attachments || [],
             id: item.id,
@@ -21,7 +30,7 @@ export default {
             text: item.body || item.text,
             fwd_messages: item.fwd_messages || [],
             out: item.out || 0,
-            read_state: item.read_state || item.out ? item.id <= in_read : item.id <= out_read
+            read_state: item.read_state || item.out === 1 ? in_read >= item.id : out_read >= item.id
         };
     },
     BuildHistory (history: any): CacheObjectType {
@@ -43,7 +52,7 @@ export default {
         if (history.profiles) {
             if (!chat_settings && id > 0) {
                 const index = history.profiles.findIndex(p => p.id === id);
-                if (~index) conversation = this.BuildProfile(history.profiles[index], conversations);
+                if (~index) conversation = this.BuildConversation(history.profiles[index], conversations);
             }
             for (const profile of history.profiles) {
                 profiles = [...profiles, this.BuildProfile(profile)];
@@ -54,7 +63,7 @@ export default {
             if (!chat_settings && id < 0) {
                 let index = 0;
                 if (history.groups.length > 1) index = history.groups.findIndex(g => Math.abs(g.id) === Math.abs(id));
-                if (~index) conversation = this.BuildGroup(history.groups[index], conversations);
+                if (~index) conversation = this.BuildConversation(history.groups[index], conversations);
             }
             for (const group of history.groups) {
                 profiles = [...profiles, this.BuildGroup(group)];
@@ -62,7 +71,8 @@ export default {
         }
 
         for (const message of history.items) {
-            messages = [this.BuildMessage(message, in_read, out_read), ...messages];
+            const build = this.BuildMessage(message, in_read, out_read);
+            messages = [build, ...messages];
         } 
 
         return { conversation, profiles, messages, draft };

@@ -109,8 +109,10 @@ export default {
             const params = { user_id: id, offset, extended: 1, fields: "photo_50" };
             const { vkr } = await this.vk.post("messages.getHistory", params);
 
+            const { out_read, in_read } = this.current.conversation;
+
             for (const msg of vkr.items) {
-                this.AddMessage({ id, message: msg, toStart: true });
+                this.AddMessage({ id, message: msg, toStart: true, out_read, in_read });
             }
 
             const scrollY = this.$refs.msgs.scrollTop;
