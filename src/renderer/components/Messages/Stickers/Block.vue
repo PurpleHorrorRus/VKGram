@@ -134,7 +134,7 @@ export default {
     position: absolute;
     bottom: 10%;
     right: 15px;
-    width: 80%;
+    width: 83%;
     height: 70%;
     border-radius: 10px;
     background: #0e0e0e;
