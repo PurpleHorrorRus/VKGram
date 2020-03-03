@@ -22,6 +22,16 @@ yarn dev
 yarn test
 ```
 
+## Upload stickers
+
+Open ./config/ and rename file settings.example.json to settings.json. Open it and edit, put **FULL PATH** by example. Then open ./stickers/ folder and copy & paste folders with sticker packs inside.
+
+Example: ./stickers/MyPack/sticker0.png
+
+Folder names categories and file names of stickers can be any
+
+This is a temporary solution, then I will simplify everything
+
 ---
 
 ## Contributing

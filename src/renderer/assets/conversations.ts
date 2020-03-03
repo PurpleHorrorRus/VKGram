@@ -6,7 +6,7 @@ const attachmentsTypes = {
     photo: "Изображение",
     audio: "Аудио",
     video: "Видео",
-    doc: "Граффити",
+    graffiti: "Стикер",
     document: "Документ",
     sticker: "Стикер",
     gift: "Подарок",

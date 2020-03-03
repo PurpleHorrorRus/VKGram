@@ -23,13 +23,15 @@ export default {
     async mounted () {
         if (!this.vk) {
             await this.auth();
+            this.cache();
             this.load();
         }
     },
     methods: {
         ...mapActions({
             auth: "vk/auth",
-            load: "conversations/Load"
+            load: "conversations/Load",
+            cache: "stickers/Cache"
         })
     }
 };

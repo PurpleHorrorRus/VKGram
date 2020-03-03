@@ -3,7 +3,7 @@
         <div class="message_avatar" :class="{ 'my-message': message.out }">
             <img class="message_avatar_image" :src="profile.photo">
         </div>
-        <div class="message" :class="{ 'my-message': message.out }">
+        <div class="message" :class="{ nobg, 'my-message': message.out }">
             <div class="message__text">
                 <div class="message__user">
                     <span class="message__user_label" v-text="profile.title" />
@@ -50,6 +50,10 @@ export default {
         }),
         time () {
             return misc.FormatTime(this.message.date);
+        },
+        nobg () {
+            if (!this.message.attachments.length) return false;
+            return this.message.attachments[0].type === "graffiti";
         }
     }
 };
@@ -87,6 +91,9 @@ export default {
   background: none;
   box-shadow: none;
   background-color: none;
+}
+.nobg .message__user_label {
+    color: #fff;
 }
 .message.choosed {
   background: rgb(13, 103, 144);

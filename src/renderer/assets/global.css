@@ -17,6 +17,14 @@ span, i, input {
     color: #fff;
 }
 
+.nowrap {
+    width: max-content;
+    max-width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
 i.clickable:hover { 
     cursor: pointer; 
     color: rgb(117, 117, 252);
@@ -29,3 +37,6 @@ i.clickable:hover {
     height: 100%;
     overflow: auto; 
 }
+
+.fade-enter-active, .fade-leave-active { transition: opacity .5s; }
+.fade-enter, .fade-leave-to { opacity: 0; }

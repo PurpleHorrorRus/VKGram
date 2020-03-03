@@ -6,6 +6,8 @@ build/*
 node_modules
 config/*
 !config/vk.example.json
+!config/settings.example.json
+stickers/*
 .gitignore
 
 # Logs

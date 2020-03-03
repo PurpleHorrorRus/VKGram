@@ -24,21 +24,30 @@
         </div>
         <div id="input-container">
             <Input @send="Send" />
+            <StickersPicker @turn="turnStickers" />
         </div>
+        <transition name="fade">
+            <StickersBlock 
+                v-if="stickers" 
+                @closePanel="stickers = false" 
+            />
+        </transition>
     </div>
 </template>
 
 <script>
+import Status from "~/components/Messages/Status/Status";
 import Message from "~/components/Messages/Message";
 import Input from "~/components/Messages/Input";
-import Status from "~/components/Messages/Status/Status";
+import StickersPicker from "~/components/Messages/StickersPicker";
+import StickersBlock from "~/components/Messages/Stickers/Block";
 import { mapActions, mapGetters } from "vuex";
 
 import misc from "~/assets/misc";
 
 export default {
     layout: "messages",
-    components: { Message, Input, Status },
+    components: { Status, Message, Input, StickersPicker, StickersBlock },
     async asyncData ({ store, route }) {
         const { id } = route.params;
 
@@ -56,7 +65,7 @@ export default {
 
         store.commit("messages/SetCurrent", id);
 
-        return { loading_messages: false };
+        return { loading_messages: false, stickers: false };
     },
     computed: {
         ...mapGetters({
@@ -101,6 +110,7 @@ export default {
             }); 
         },
         Back () { return this.$router.replace("/"); },
+        turnStickers () { return this.stickers = true; },
         async LoadMore () {
             this.loading_messages = true;
 
@@ -205,5 +215,10 @@ export default {
 
 #input-container {
     grid-area: input-container;
+    display: grid;
+    grid-template-columns: 1fr 40px;
+    grid-template-rows: 1fr;
+    grid-template-areas: "input sticker-picker";
+    border-top: 1px solid rgb(92, 92, 92);
 }
 </style>

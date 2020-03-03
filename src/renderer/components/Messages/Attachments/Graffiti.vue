@@ -17,9 +17,7 @@ export default {
 </script>
 
 <style>
-.graffiti {
-    width: 100%;
-}
+.graffiti { width: 100%; }
 
 .graffiti .graffiti-image {
     width: 100%;

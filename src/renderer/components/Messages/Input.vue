@@ -49,22 +49,25 @@ export default {
 
 <style>
 #input {
+    grid-area: input;
     display: block;
     width: 100%;
     height: 100%;
     padding: 5px;
-    border-top: 1px solid rgb(92, 92, 92);
-    
 }
 
 #input-field {
     display: block;
-    width: 90%;
+    width: 100%;
     height: 100%;
     background: none;
     border: none;
     outline: none;
     color: #fff;
     font-family: Roboto;
+}
+
+#sticker-picker-icon {
+    display: inline-block;
 }
 </style>
