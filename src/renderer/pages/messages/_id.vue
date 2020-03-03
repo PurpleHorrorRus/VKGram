@@ -76,7 +76,10 @@ export default {
         }
     },
     updated () { return this.$nextTick(() => this.ScrollToEnd()); },
-    mounted () { return this.$refs.msgs.addEventListener("scroll", this.HandleScroll); },
+    mounted () { 
+        this.ScrollToEnd(true);
+        return this.$refs.msgs.addEventListener("scroll", this.HandleScroll); 
+    },
     methods: {
         ...mapActions({
             AddMessage: "messages/AddMessage"
@@ -113,13 +116,16 @@ export default {
                     this.AddMessage({ id, message: msg, toStart: true });
                 }
 
-                return this.loading_messages = false;
+                return setTimeout(() => this.loading_messages = false, 200);
             }
         },
         ScrollToEnd (force = false) {
+            if (this.loading_messages) return;
             const scrollY = this.$refs.msgs.scrollTop;
             const height = this.$refs.msgs.scrollHeight;
-            if ((height - scrollY < 600 || force) && !this.loading_messages) { 
+            const handle = 600;
+            const _h = height - scrollY;
+            if (_h < handle || force) { 
                 return this.$refs.msgs.scrollTop = this.$refs.msgs.lastElementChild.offsetTop;
             }
         }
