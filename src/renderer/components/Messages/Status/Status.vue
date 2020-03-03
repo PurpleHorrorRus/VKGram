@@ -25,7 +25,10 @@ export default {
         ...mapGetters({
             current: "messages/Current"
         }),
-        online () { return this.current.conversation.online === 1; }
+        online () { 
+            const { online } = this.current.conversation;
+            return Number(online) === 1; // Неплохой мув
+        }
     }
 };
 </script>

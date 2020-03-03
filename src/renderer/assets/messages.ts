@@ -72,7 +72,7 @@ export default {
         for (const message of history.items) {
             const build = this.BuildMessage(message, in_read, out_read);
             messages = [build, ...messages];
-        } 
+        }
 
         return { conversation, profiles, messages, draft };
     }

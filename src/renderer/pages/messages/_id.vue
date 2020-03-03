@@ -93,7 +93,8 @@ export default {
             current: "messages/Current"
         }),
         last_seen () {
-            const { time, platform } = this.current.conversation.last_seen;
+            const { time } = this.current.conversation.last_seen;
+            const platform = this.current.conversation.last_seen.platform || this.current.conversation.online_mobile;
             return { time: misc.FormatTime(time), platform };
         }
     },

@@ -36,17 +36,17 @@ export default {
                 else state.messages[id].messages = [build, ...state.messages[id].messages];
             }
         },
-        SetOnline (state, { id, online_mobile }) {
+        SetOnline (state, { id, platform }) {
             if (state.messages[id]) {
                 state.messages[id].conversation.online = true;
-                state.messages[id].conversation.online_mobile = online_mobile;
+                state.messages[id].conversation.online_mobile = platform;
             }
         },
         SetOffline (state, { id, timestamp }) {
             if (state.messages[id]) {
                 state.messages[id].conversation.last_seen = {
                     time: timestamp,
-                    platform: state.messages[id].conversation.online_mobile
+                    platform: state.messages[id].conversation.online_mobile || 7
                 };
                 state.messages[id].conversation.online = false;
                 state.messages[id].conversation.online_mobile = false;
