@@ -9,6 +9,10 @@
                     <span class="message__user_label" v-text="profile.title" />
                 </div>
                 <span v-if="message.text" class="message_text" v-text="message.text" />
+                <Attachments 
+                    v-if="message.attachments.length"
+                    :attachments="message.attachments"
+                />
                 <div class="message__text__content">
                     <span class="message__time" v-text="time" />
                     <div v-if="!message.read_state" class="message_unread" />
@@ -23,10 +27,13 @@ import { mapGetters } from "vuex";
 import { MessageType } from "~/types/Messages/MessageType";
 import { CacheProfileType } from "~/types/Messages/CacheProfileType";
 
+import Attachments from "~/components/Messages/attachments";
+
 import misc from "~/assets/misc";
 
 export default {
     name: "Message",
+    components: { Attachments },
     props: {
         message: {
             type: MessageType,
@@ -58,7 +65,7 @@ export default {
   align-items: center;
   position: relative;
   min-height: 30px;
-  max-width: 300px;
+  max-width: 330px;
   background-color: #fff;
   margin-bottom: 8px;
   border-radius: 6px;
