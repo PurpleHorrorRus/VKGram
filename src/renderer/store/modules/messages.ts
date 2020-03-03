@@ -22,11 +22,7 @@ export default {
             if (state.messages[id]) {
                 const { profiles } = state.messages[id];
                 state.messages[id].profiles = profiles.concat(build.profiles);
-                console.log(state.messages[id]);
-            } else {
-                console.log("Cache new", build);
-                state.messages[id] = build;
-            }
+            } else state.messages[id] = build;
         },
         SetCurrent (state, id: number) {
             if (state.messages[id]) {
