@@ -100,24 +100,24 @@ export default {
             }); 
         },
         Back () { return this.$router.replace("/"); },
-        async HandleScroll () {
-            const scrollY = this.$refs.msgs.scrollTop;
-            if (scrollY <= 500 && !this.loading_messages) {
-                this.loading_messages = true;
+        async LoadMore () {
+            this.loading_messages = true;
 
-                const { length: offset } = this.current.messages; 
+            const { length: offset } = this.current.messages; 
+            const { id } = this.current.conversation;
 
-                const { id } = this.current.conversation;
+            const params = { user_id: id, offset, extended: 1, fields: "photo_50" };
+            const { vkr } = await this.vk.post("messages.getHistory", params);
 
-                const params = { user_id: id, offset, extended: 1, fields: "photo_50" };
-                const { vkr } = await this.vk.post("messages.getHistory", params);
-
-                for (const msg of vkr.items) {
-                    this.AddMessage({ id, message: msg, toStart: true });
-                }
-
-                return setTimeout(() => this.loading_messages = false, 200);
+            for (const msg of vkr.items) {
+                this.AddMessage({ id, message: msg, toStart: true });
             }
+
+            return setTimeout(() => this.loading_messages = false, 200);
+        },
+        HandleScroll () {
+            const scrollY = this.$refs.msgs.scrollTop;
+            if (scrollY <= 500 && !this.loading_messages) return this.LoadMore();
         },
         ScrollToEnd (force = false) {
             if (this.loading_messages) return;
