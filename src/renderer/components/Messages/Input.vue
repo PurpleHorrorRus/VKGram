@@ -14,6 +14,8 @@
 </template>
 
 <script lang="ts">
+import { mapGetters } from "vuex";
+
 export default {
     data: () => ({
         value: "",
@@ -21,6 +23,11 @@ export default {
         ctrl: false,
         loading: false
     }),
+    computed: {
+        ...mapGetters({
+            vk: "vk/GetVK"
+        })
+    },
     methods: {
         press (e) {
             const { keyCode } = e;
@@ -30,18 +37,20 @@ export default {
                     e.preventDefault();
 
                     const message: string = this.value.trim();
-                    if (!message) return;
-
                     this.value = "";
-                    
+
                     return this.$emit("send", message);
                 }
+            } else if (keyCode === 17) this.ctrl = true;
+            else if (keyCode === 86) {
+                if (!this.ctrl) return;
+                return this.$emit("AddScreenshot");
             }
         },
         unpress (e) {
             const { keyCode } = e;
             if (keyCode === 16) this.shift = false;
-            if (keyCode === 171) this.ctrl = false;
+            if (keyCode === 17) this.ctrl = false;
         }
     }
 };

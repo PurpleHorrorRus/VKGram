@@ -1,5 +1,5 @@
 <template>
-    <div id="messages-page">
+    <div id="messages-page" :class="{ screenshot: screenshots.length || screenshots_query > 0 }">
         <div id="account-container">
             <div id="back-container">
                 <i class="fas fa-arrow-left clickable" @click="Back" />
@@ -22,8 +22,20 @@
                 :profile="Profile(message.from_id)" 
             />
         </div>
+        <div v-if="screenshots.length" id="screenshots-container">
+            <img
+                v-for="(screenshot, index) of screenshots"
+                :key="index"
+                class="screenshot"
+                :src="screenshot.sizes[0].url"
+                @click="RemoveScreenshot(index)"
+            >
+        </div>
         <div id="input-container">
-            <Input @send="Send" />
+            <Input 
+                @send="Send"
+                @AddScreenshot="AddScreenshot"
+            />
             <StickersPicker @turn="turnStickers" />
         </div>
         <transition name="fade">
@@ -36,6 +48,9 @@
 </template>
 
 <script>
+import { writeFileSync, unlinkSync } from "fs";
+import { clipboard } from "electron";
+
 import Status from "~/components/Messages/Status/Status";
 import Message from "~/components/Messages/Message";
 import Input from "~/components/Messages/Input";
@@ -65,7 +80,12 @@ export default {
 
         store.commit("messages/SetCurrent", id);
 
-        return { loading_messages: false, stickers: false };
+        return { 
+            loading_messages: false, 
+            stickers: false, 
+            screenshots: [], 
+            screenshots_query: 0 
+        };
     },
     computed: {
         ...mapGetters({
@@ -99,15 +119,53 @@ export default {
             const UserIndex = profiles.findIndex(p => p.id === Math.abs(from_id));
             if (~UserIndex) return profiles[UserIndex];
         },
+        async AddScreenshot () {
+            const availableFormats = clipboard.availableFormats("clipboard");
+            if (availableFormats.includes("image/png") || availableFormats.includes("image/jpeg")) {
+                this.screenshots_query++;
+                const path = `./tmp${misc.GetRandom(10000, 99999)}.png`;
+                const screenshot = clipboard.readImage("clipboard").toDataURL();
+                writeFileSync(path, screenshot.replace(/^data:image\/png;base64,/, ""), "base64");
+                const { uploader: server } = this.vk;
+                const { url } = await server.getUploadURL("photos.getMessagesUploadServer", { type: "photo" });
+                const { vkr: fileData } = await server.uploadFile(url, path, "photo", {});
+                unlinkSync(path);
+
+                let { vkr: saved } = await this.vk.post("photos.saveMessagesPhoto", {
+                    photo: fileData.photo,
+                    server: fileData.server,
+                    hash: fileData.hash
+                });
+
+                saved = saved[0];
+                saved.sizes = saved.sizes.sort((a, b) => a.width + a.height > b.width + b.height).reverse();
+
+                this.screenshots = [...this.screenshots, saved];
+                this.screenshots_query--;
+                return this.$emit("SetScreenshots", this.screenshots);
+            }
+        },
+        ClearScreenshots () {
+            this.screenshots_query = 0;
+            return this.screenshots = [];
+        },
+        RemoveScreenshot (index) { this.screenshots.splice(index, 1); },
         Send (message) {
+            if (!message && !this.screenshots.length) return;
             const random_id = misc.GetRandom(100000, 999999);
             const { conversation } = this.current;
-            const { id } = conversation;    
-            this.vk.post("messages.send", {
+            const { id } = conversation;   
+            let to_send = {
                 peer_id: id,
                 random_id,
                 message
-            }); 
+            };
+            if (this.screenshots.length) {
+                const attachment = this.screenshots.map(s => `photo${s.owner_id}_${s.id}`).join(",");
+                to_send = Object.assign(to_send, { attachment });
+                this.ClearScreenshots();
+            }
+            this.vk.post("messages.send", to_send); 
         },
         Back () { return this.$router.replace("/"); },
         turnStickers () { return this.stickers = true; },
@@ -162,11 +220,17 @@ export default {
     height: 100%;
 }
 
+#messages-page.screenshot {
+    grid-template-columns: 100%;
+    grid-template-rows: 40px 1fr 100px minmax(40px, auto);
+    grid-template-areas: "account-container" "messages-main" "screenshots-container" "input-container";
+}
+
 #account-container {
     grid-area: account-container;
     display: grid;
     grid-template-columns: 40px 40px 1fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 100%;
     grid-template-areas: "back-container avatar-container title-container";
     border-bottom: 1px solid rgb(66, 66, 66);
     z-index: 1;
@@ -211,6 +275,26 @@ export default {
     z-index: 0;
     padding: 5px;
     height: 100%;
+}
+
+#screenshots-container {
+    grid-area: screenshots-container;
+    padding: 10px;
+    border-top: 1px solid rgb(92, 92, 92);
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+#screenshots-container .screenshot {
+    width: auto;
+    height: 100%;
+    margin-right: 10px;
+    user-select: none;
+}
+
+#screenshots-container .screenshot:hover {
+    cursor: pointer;
 }
 
 #input-container {
