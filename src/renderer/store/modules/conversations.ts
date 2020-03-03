@@ -48,7 +48,14 @@ export default {
         },
         AddUnread (state, id: number) {
             const ConversationIndex = state.conversations.findIndex(c => c.id === id);
-            if (~ConversationIndex) state.conversations.unread_count++;
+            if (~ConversationIndex) state.conversations[ConversationIndex].unread_count++;
+        },
+        Read (state, id: number) {
+            const ConversationIndex = state.conversations.findIndex(c => c.id === id);
+            if (~ConversationIndex) {
+                state.conversations[ConversationIndex].message.read_state = true;
+                console.log("User has read a message", state.conversations[ConversationIndex]);
+            }
         },
         Move (state, id) {
             const ConversationIndex = state.conversations.findIndex(c => c.id === id);

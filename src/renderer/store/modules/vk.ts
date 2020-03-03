@@ -85,6 +85,18 @@ export default {
                         commit("messages/SetOffline", { id, timestamp }, { root: true });
                     });
 
+                    longpoll.on("changeFlags", data => {
+                        const msg_id = data[1];
+                        const flag = data[2];
+                        const to = data[3];
+                        if (flag === 1) { // Read message
+                            setTimeout(() => {
+                                commit("conversations/Read", to, { root: true });
+                                commit("messages/Read", { id: to, msg_id }, { root: true });
+                            }, 200);
+                        }
+                    });
+
                     longpoll.on("error", () => dispatch("vk/LPConnect"));
 
                     commit("SetLongPoll", longpoll);

@@ -47,6 +47,17 @@ export default {
                 state.messages[id].conversation.online = false;
                 state.messages[id].conversation.online_mobile = false;
             }
+        },
+        Read (state, { id, msg_id }) {
+            if (state.messages[id]) {
+                const { messages } = state.messages[id];
+                const index = messages.findIndex(m => m.id === msg_id);
+                for (let i = index; i >= 0; i--) {
+                    if (messages[i].read_state) break;
+                    messages[i].read_state = true;
+                }
+                state.messages[id].messages = messages;
+            }
         }
     },
     actions: {
