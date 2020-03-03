@@ -78,8 +78,8 @@ export default {
 <style>
 .sticker {
     display: inline-block;
-    width: 60px;
-    height: 60px;
+    width: 75px;
+    height: 75px;
     padding: 5px;
     user-select: none;
     transition: all .6s ease;
