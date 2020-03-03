@@ -1,14 +1,21 @@
 <template>
-    <div id="sticker-picker">
+    <div v-if="stickers.length" id="sticker-picker">
         <i id="sticker-picker-icon" class="fas fa-smile" @mouseenter.self="turn" />
     </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+
 export default {
     data: () => ({
         show: false
     }),
+    computed: {
+        ...mapGetters({
+            stickers: "stickers/Get"
+        })
+    },
     methods: {
         turn () {
             return this.$emit("turn");
