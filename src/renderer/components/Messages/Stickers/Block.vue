@@ -134,7 +134,7 @@ export default {
     position: absolute;
     bottom: 10%;
     right: 15px;
-    width: 83%;
+    width: 78%;
     height: 70%;
     border-radius: 10px;
     background: #0e0e0e;
@@ -145,7 +145,7 @@ export default {
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    padding: 15px;
+    padding-left: 10px;
 }
 
 #sticker-full {
