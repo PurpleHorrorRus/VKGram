@@ -53,7 +53,6 @@ export default {
         isUnreadOut () { 
             const { message } = this.conversation;
             const { out, read_state } = message;
-            console.log(message);
             return out && !read_state; 
         },
         time () { return misc.FormatTime(this.conversation.message.date); },
