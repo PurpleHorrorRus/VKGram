@@ -2,7 +2,7 @@
     <div class="wall">
         <div class="wall-info">
             <i :icon="['fa', 'retweet']" />
-            <img class="wall-avatar" :src="wall.from.photo_max">
+            <img class="wall-avatar" :src="wall.from.photo_50">
             <span class="wall-title" v-text="title" />
         </div>
         <div class="wall-content">
@@ -31,7 +31,8 @@ export default {
             else return `${from.first_name} ${from.last_name}`;
         },
         atts () { return this.wall.attachments || this.wall.copy_history[0].attachments; }
-    }
+    },
+    mounted () { console.log(this.wall); }
 };
 </script>
 
@@ -72,5 +73,6 @@ export default {
     display: block;
     margin-bottom: 5px;
     font-size: 9pt;
+    color: #000;
 }
 </style>
