@@ -31,8 +31,7 @@ export default {
             else return `${from.first_name} ${from.last_name}`;
         },
         atts () { return this.wall.attachments || this.wall.copy_history[0].attachments; }
-    },
-    mounted () { console.log(this.wall); }
+    }
 };
 </script>
 
