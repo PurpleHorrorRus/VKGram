@@ -45,7 +45,7 @@ export default {
         if (chat_settings) {
             const { title, photo: _p } = chat_settings;
             const { photo_50: photo } = _p;
-            conversation = { id, title, photo };
+            conversation = { id, title, photo, in_read, out_read };
         }
 
         if (history.profiles) {

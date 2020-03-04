@@ -4,4 +4,6 @@ export type CacheProfileType = {
     title: string
     online?: boolean
     last_seen?: number
+    in_read?: number
+    out_read?: number
 };
