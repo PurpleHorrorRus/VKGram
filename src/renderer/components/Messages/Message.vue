@@ -114,10 +114,11 @@ export default {
 }
 
 .message_text {
-  width: 100%;
-  display: inline-block;
-  font-size: 10pt;
-  color: #000;
+    width: 100%;
+    display: inline-block;
+    font-size: 10pt;
+    color: #000;
+    word-break: break-all;
 }
 
 .message__text,

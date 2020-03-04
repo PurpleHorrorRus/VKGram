@@ -67,12 +67,3 @@ export default {
     }
 };
 </script>
-
-<style>
-#attachments-block {
-    display: flex;
-    width: auto;
-    max-width: max-content;
-    margin-top: 5px;
-}
-</style>
