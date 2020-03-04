@@ -183,7 +183,6 @@ export default {
             this.Cache({ id, history });
 
             const { out_read, in_read } = this.current.conversation;
-            console.log(this.current);
 
             for (const msg of history.items) {
                 this.AddMessage({ id, message: msg, toStart: true, out_read, in_read });
