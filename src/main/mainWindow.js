@@ -10,6 +10,7 @@ const winHandler = new BrowserWinHandler({
     width: 500,
     minHeight: 600,
     minWidth: 500,
+    useContentSize: true,
     frame: false
 });
 

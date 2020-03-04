@@ -9,6 +9,20 @@ module.exports = {
     head: {
         title: "vkgramnuxt"
     },
+    build: {
+        extend (config) {
+            config.module.rules
+                .filter(r => r.test.toString().includes("svg"))
+                .forEach(r => {
+                    r.test = /\.(png|jpe?g|gif)$/;
+                });
+                
+            config.module.rules.push({
+                test: /\.svg$/,
+                loader: "vue-svg-loader"
+            });
+        }
+    },
     loading: "components/loading.vue",
     css: ["~/assets/global.css"],
     plugins: [
