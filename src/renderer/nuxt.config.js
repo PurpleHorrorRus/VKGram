@@ -16,7 +16,6 @@ module.exports = {
                 .forEach(r => {
                     r.test = /\.(png|jpe?g|gif)$/;
                 });
-                
             config.module.rules.push({
                 test: /\.svg$/,
                 loader: "vue-svg-loader"

@@ -1,32 +1,28 @@
 <template>
     <div id="titlebar">
         <div id="drag-region">
+            <i id="titlebar-settings-icon" class="fas fa-cog" />
             <span id="label" v-text="'VKGram'" />
         </div>
         <div id="minimize" class="button" @click="minimize">
-            <minimize />
+            <i class="far fa-window-minimize" />
         </div>
         <div v-if="!maximized" id="maximize" class="button" @click="maximize">
-            <maximize />
+            <i class="fas fa-compress" />
         </div>
         <div v-else id="restore" class="button" @click="restore">
-            <restore />
+            <i class="fas fa-compress" />
         </div>
         <div id="close" class="button" @click="close">
-            <close />
+            <i class="fas fa-times" />
         </div>
     </div>
 </template>
 
 <script>
-import minimize from "./minimize.svg";
-import maximize from "./maximize.svg";
-import restore from "./restore.svg";
-import close from "./close.svg";
 import { remote } from "electron";
 
 export default {
-    components: { minimize, maximize, restore, close },
     data: () => ({ 
         maximized: false,
         hold: false
@@ -73,11 +69,22 @@ export default {
     vertical-align: middle;
 }
 
+#titlebar #titlebar-settings-icon {
+    margin-left: 5px;
+    font-size: 9pt;
+}
+
+#titlebar-settings-icon:hover {
+    cursor: pointer;
+    color: rgb(117, 117, 252);
+}
+
 #titlebar #label {
     display: inline-block;
     font-family: Acme;
     user-select: none;
     margin: 5px;
+    margin-left: 0px;
 }
 
 #drag-region { 
@@ -96,11 +103,10 @@ export default {
     background: rgb(73, 73, 73);
 }
 
-.button svg {
-    font-size: 7pt;
-    width: 10px;
-    height: 15px;
-    fill: #fff;
+.button i {
+    font-weight: 400;
+    text-align: center;
+    font-size: 10pt;
 }
 
 #minimize { grid-area: minimize; }

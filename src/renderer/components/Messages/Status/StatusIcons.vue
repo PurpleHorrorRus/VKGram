@@ -37,7 +37,10 @@ export default {
 </script>
 
 <style scoped>
-.status {  vertical-align: middle; }
+.status { 
+    display: inline-block; 
+    vertical-align: middle; 
+}
 i { font-size: 9pt; }
 .online { color: rgb(128, 255, 185); }
 #online-circle {
