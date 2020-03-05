@@ -18,7 +18,11 @@ module.exports = {
         }
     },
     head: {
-        title: "vkgramnuxt"
+        title: "VKGram",
+        meta: [
+            { charset: "utf-8" },
+            { name: "viewport", content: "width=device-width, initial-scale=1" }
+        ]
     },
     loading: "components/loading.vue",
     css: ["~/assets/global.css"],
