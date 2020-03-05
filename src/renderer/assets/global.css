@@ -35,7 +35,7 @@ i.clickable:hover {
 .main-container {
     grid-area: main-container;
     height: 100%;
-    overflow: auto; 
+    overflow: hidden;
 }
 
 .fade-enter-active, .fade-leave-active { transition: opacity .5s; }

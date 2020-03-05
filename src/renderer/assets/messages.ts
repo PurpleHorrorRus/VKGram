@@ -4,8 +4,13 @@ import { CacheObjectType } from "~/types/Messages/CacheObjectType";
 
 export default {
     BuildConversation (object: any, conversations: any): CacheProfileType {
-        const { id } = object;
-        const conversation: CacheProfileType = id > 0 ? this.BuildProfile(object) : this.BuildGroup(object);
+        const { type } = object;
+
+        const conversation: CacheProfileType = 
+        !type
+            ? this.BuildProfile(object) 
+            : this.BuildGroup(object);
+
         return Object.assign(conversation, {
             out_read: conversations.out_read,
             in_read: conversations.in_read
@@ -14,20 +19,44 @@ export default {
     BuildProfile (profile: any): CacheProfileType {
         const { id, photo_50: photo, online, last_seen } = profile;
         const title: string = `${profile.first_name} ${profile.last_name}`;
-        return { id, title, photo, online, last_seen };
+        return { 
+            id,
+            title, 
+            type: "user",
+            typing: false,
+            photo, 
+            online, 
+            last_seen 
+        };
     },
     BuildGroup (group: any): CacheProfileType {
         const { id, name: title, photo_50: photo } = group;
-        return { id, title, photo };
+        return { 
+            id, 
+            title,
+            typing: false,
+            type: "group",
+            photo 
+        };
     },
     BuildMessage (item: any, out_read: number = 0, in_read: number = 0): MessageType {
+        let fwd = [];
+        if (item.fwd_messages) {
+            if (item.fwd_messages.length) {
+                for (const _f of item.fwd_messages) {
+                    const build = this.BuildMessage(_f);
+                    fwd = [...fwd, build];
+                }
+            }
+        }
+
         return {
             attachments: item.attachments || [],
-            id: item.id,
+            id: item.id || item.conversation_message_id,
             from_id: item.from_id || item.user_id,
             date: item.date,
             text: item.body || item.text,
-            fwd_messages: item.fwd_messages || [],
+            fwd_messages: fwd,
             out: item.out || 0,
             read_state: item.read_state || item.out === 1 ? in_read >= item.id : out_read >= item.id
         };
@@ -45,7 +74,15 @@ export default {
         if (chat_settings) {
             const { title, photo: _p } = chat_settings;
             const { photo_50: photo } = _p;
-            conversation = { id, title, photo, in_read, out_read };
+            conversation = { 
+                id, 
+                title, 
+                type: "chat",
+                typing: false,
+                photo, 
+                in_read, 
+                out_read 
+            };
         }
 
         if (history.profiles) {

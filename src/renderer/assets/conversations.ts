@@ -8,17 +8,20 @@ const attachmentsTypes = {
     video: "Видео",
     graffiti: "Стикер",
     document: "Документ",
+    doc: "Документ",
     sticker: "Стикер",
     gift: "Подарок",
     link: "Ссылка",
     audio_message: "Голосовое сообщение",
-    audio_playlist: "Плейлист"
+    audio_playlist: "Плейлист",
+    fwd: "сообщение",
+    fwds: "сообщения"
 };
 
 export default {
     BuildConversationMessage (item: any, AppendName: string = "") {
         const { conversation, last_message } = item;
-        const { attachments, id, from_id, date, text, out } = last_message;
+        const { attachments, fwd_messages, id, from_id, date, text, out } = last_message;
         let atts = [];
 
         let read_state = false;
@@ -40,11 +43,16 @@ export default {
             } 
         }
 
+        if (fwd_messages.length) {
+            const _f = fwd_messages.length > 1 ? attachmentsTypes.fwds : attachmentsTypes.fwd;
+            atts = [...atts, `${fwd_messages.length} ${_f}`];
+        }
+
         const message: ConversationMessageType = {
             id,
             from_id,
             date,
-            append_name: AppendName,
+            append_name: AppendName ? AppendName + ":" : "",
             attachments: atts,
             text,
             out,
@@ -94,10 +102,27 @@ export default {
             }
             title = chat_settings.title;
             photo = chat_settings.photo.photo_50;
-        } else { console.log(type); }
+        } else { console.log("Unknown type", type); }
 
-        if (!message) message = this.BuildConversationMessage(item);
-        return { id, title, photo, msg_id, out_read, in_read, unread_count, online, online_mobile, message };
+        if (!message) {
+            if (item.last_message.out) {
+                message = this.BuildConversationMessage(item, "Вы");
+            } else message = this.BuildConversationMessage(item);
+        }
+
+        return { 
+            id, 
+            title, 
+            photo, 
+            msg_id, 
+            out_read, 
+            in_read, 
+            typing: false,
+            unread_count, 
+            online, 
+            online_mobile, 
+            message 
+        };
     },
     BuildConversations (items: any, groups: any, profiles: any): Array<object> {
         let ready = [];
