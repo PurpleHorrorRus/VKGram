@@ -1,6 +1,8 @@
 import { readFileSync } from "fs";
 import easyvk from "easyvk";
 
+import sound from "~/assets/message.mp3";
+
 function ReadJSON (dir: string) {
     const content = readFileSync(dir, "UTF-8");
     const json = JSON.parse(content);
@@ -57,11 +59,18 @@ export default {
                         const to: number = data[3];
 
                         const { items } = await getMessage(message_id);
-                        const item: object = { 
+                        const item: any = { 
                             last_message: Object.assign(items[0], { 
                                 read_state: items[0].read_state || false 
                             })
                         };
+
+                        const my = item.last_message.out;
+                        if (!my) {
+                            commit("conversations/AddUnread", to, { root: true });
+                            const notification = new Audio(String(sound));
+                            notification.play();
+                        }
 
                         commit("conversations/SetMessage", { id: to, item }, { root: true });
                         commit("conversations/Move", to, { root: true });
@@ -90,6 +99,7 @@ export default {
                         const flag = data[2];
                         const to = data[3];
                         if (flag === 1) { // Read message
+                            commit("conversations/RemoveUnread", to, { root: true });
                             setTimeout(() => {
                                 commit("conversations/Read", to, { root: true });
                                 commit("messages/Read", { id: to, msg_id }, { root: true });
