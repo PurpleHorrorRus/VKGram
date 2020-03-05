@@ -1,6 +1,7 @@
 <template>
     <div id="attachments-block">
         <div v-for="(attachment, index) of attachments" :key="index" class="attachment">
+            <Document v-if="attachment.type == 'doc'" :document="attachment.doc" />
             <Sticker v-if="attachment.type == 'sticker'" :sticker="attachment.sticker" />
             <Photo v-if="attachment.type == 'photo'" :photo="attachment.photo" />
             <Video v-if="attachment.type == 'video'" :video="attachment.video" />
@@ -21,17 +22,18 @@
 </template>
 
 <script>
-import Sticker from "~/components/Messages/Attachments/Sticker";
-import Photo from "~/components/Messages/Attachments/Photo";
-import Video from "~/components/Messages/Attachments/Video";
-import Wall from "~/components/Messages/Attachments/Wall";
-import Graffiti from "~/components/Messages/Attachments/Graffiti";
-import AudioMessage from "~/components/Messages/Attachments/AudioMessage";
-import Link from "~/components/Messages/Attachments/Link";
-
 export default {
     name: "Attachments",
-    components: { Sticker, Photo, Video, Wall, Graffiti, AudioMessage, Link },
+    components: { 
+        Document: () => import("~/components/Messages/Attachments/Document"),
+        Sticker: () => import("~/components/Messages/Attachments/Sticker"), 
+        Photo: () => import("~/components/Messages/Attachments/Photo"),
+        Video: () => import("~/components/Messages/Attachments/Video"), 
+        Wall: () => import("~/components/Messages/Attachments/Wall"), 
+        Graffiti: () => import("~/components/Messages/Attachments/Graffiti"), 
+        AudioMessage: () => import("~/components/Messages/Attachments/AudioMessage"), 
+        Link: () => import("~/components/Messages/Attachments/Link") 
+    },
     props: {
         attachments: {
             type: Array,

@@ -13,6 +13,7 @@
                     v-if="message.attachments.length"
                     :attachments="message.attachments"
                 />
+                <Forwarded v-if="message.fwd_messages.length" :messages="message.fwd_messages" />
                 <div class="message__text__content">
                     <span class="message__time" v-text="time" />
                     <div v-if="!message.read_state" class="message_unread" />
@@ -28,12 +29,13 @@ import { MessageType } from "~/types/Messages/MessageType";
 import { CacheProfileType } from "~/types/Messages/CacheProfileType";
 
 import Attachments from "~/components/Messages/attachments";
+import Forwarded from "~/components/Messages/Forwarded";
 
 import misc from "~/assets/misc";
 
 export default {
     name: "Message",
-    components: { Attachments },
+    components: { Attachments, Forwarded },
     props: {
         message: {
             type: MessageType,
@@ -60,8 +62,6 @@ export default {
 </script>
 
 <style>
-*,
-:after, :before {box-sizing: border-box; }
 .message-block { display: flex; }
 
 .message {
@@ -118,7 +118,7 @@ export default {
     display: inline-block;
     font-size: 10pt;
     color: #000;
-    word-break: break-all;
+    word-break: break-word;
 }
 
 .message__text,
@@ -176,7 +176,7 @@ export default {
 
 .message_unread {
   width: 5px;
-  height: 5px;
+  height: 2px;
   border-radius: 50px;
   background: #5dc452;
   display: block;
