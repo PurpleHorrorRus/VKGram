@@ -1,10 +1,10 @@
 <template>
     <div id="index-page">
-        <div id="header">
+        <div class="header">
             <Search />
             <i id="settings-icon" class="fas fa-cog" />
         </div>
-        <div id="conversations">
+        <div class="conversations">
             <Conversation 
                 v-for="conversation of conversations" 
                 :key="conversation.id" 
@@ -17,7 +17,7 @@
 <script>
 import { mapActions, mapGetters } from "vuex";
 
-import Search from "~/components/Conversations/Search";
+import Search from "~/components/Misc/Search";
 import Conversation from "~/components/Conversations/Conversation";
 export default {
     components: { Search, Conversation },
@@ -50,17 +50,23 @@ export default {
     grid-template-columns: 1fr;
     grid-template-rows: 50px 1fr;
     grid-template-areas: "header" "conversations";
+    height: 100%;
 }
 
-#header {
+.header {
+    grid-area: header;
     display: grid;
     grid-template-columns: 1fr 30px;
     grid-template-rows: 1fr;
     grid-template-areas: "Search Settings";
 }
 
-#header { grid-area: header; }
-#conversations { grid-area: conversations; }
+.conversations { 
+    grid-area: conversations;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
 #settings-icon { 
     grid-area: Settings; 

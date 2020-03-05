@@ -34,6 +34,7 @@ export default {
                 const build = m_scripts.BuildMessage(message, Number(out_read), Number(in_read));
                 if (!toStart) state.messages[id].messages = [...state.messages[id].messages, build];
                 else state.messages[id].messages = [build, ...state.messages[id].messages];
+                state.messages[id].conversation.typing = false;
             }
         },
         SetOnline (state, { id, platform }) {
@@ -62,10 +63,16 @@ export default {
                 }
                 state.messages[id].messages = messages;
             }
-        }
+        },
+        Typing (state, id) {
+            if (state.messages[id]) {
+                state.messages[id].conversation.typing = true;
+                setTimeout(() => state.messages[id].conversation.typing = false, 5 * 1000);
+            }
+        } 
     },
     actions: {
-        AddMessage ({ commit }, data) { return commit("AddMessage", data); },
+        AddMessage ({ commit }, data: object) { return commit("AddMessage", data); },
         Cache ({ commit }, { id, history }) {
             return new Promise(async (resolve, reject) => {
                 /*
@@ -90,6 +97,19 @@ export default {
                 commit("Cache", { id, history });
                 return resolve();
             });
+        },
+        async MarkAsRead ({ getters, rootGetters }, id: number) {
+            const { messages } = getters.Current;
+            const { length } = messages;
+            const last_message = messages[length - 1];
+            if (!last_message.read_state) {
+                const { id: start_message_id } = last_message;
+                const vk = rootGetters["vk/GetVK"];
+                await vk.call("messages.markAsRead", {
+                    peer_id: id,
+                    start_message_id
+                });
+            }
         }
     },
     getters: {

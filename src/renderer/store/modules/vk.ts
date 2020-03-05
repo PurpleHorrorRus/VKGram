@@ -97,6 +97,12 @@ export default {
                         }
                     });
 
+                    longpoll.on("typeInDialog", data => {
+                        const to = data[1];
+                        commit("conversations/Typing", to, { root: true });
+                        commit("messages/Typing", to, { root: true });
+                    });
+
                     longpoll.on("error", () => dispatch("vk/LPConnect"));
 
                     commit("SetLongPoll", longpoll);

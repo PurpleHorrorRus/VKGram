@@ -3,6 +3,7 @@
         <div class="avatar-area">
             <StatusIcons 
                 v-if="conversation.online" 
+                class="conversation-status"
                 :online="conversation.online" 
                 :platform="conversation.online_mobile" 
             />
@@ -15,20 +16,28 @@
             <div class="content-area-info">
                 <span class="converstaion-title" v-text="conversation.title" />
                 <div class="conversation-message-block">
-                    <span v-if="conversation.message.append_name" 
-                          class="chat-name" 
-                          v-text="conversation.message.append_name" 
-                    />
-                    <span v-if="conversation.message.attachments.length" 
-                          class="conversation-attachments" 
-                          v-text="formatAttachments" 
-                    />
-                    <span class="conversation-message" v-text="conversation.message.text" />
+                    <div v-if="!conversation.typing" class="not-typing">
+                        <span 
+                            v-if="conversation.message.append_name" 
+                            class="chat-name" 
+                            v-text="conversation.message.append_name" 
+                        />
+                        <span 
+                            v-if="conversation.message.attachments.length" 
+                            class="conversation-attachments" 
+                            v-text="formatAttachments" 
+                        />
+                        <span 
+                            class="conversation-message nowrap" 
+                            v-text="conversation.message.text" 
+                        />
+                    </div>
+                    <Typing v-else />
                 </div>
             </div>
         </div>
         <div class="info-area">
-            <span class="conversation-time" v-text="time" />
+            <span class="conversation-time nowrap" v-text="time" />
             <div v-if="isUnreadOut" class="conversation-unread">
                 <div class="conversation-unread-round" />
             </div>
@@ -38,9 +47,10 @@
 
 <script>
 import StatusIcons from "~/components/Messages/Status/StatusIcons";
+import Typing from "~/components/Misc/Typing";
 import misc from "~/assets/misc";
 export default {
-    components: { StatusIcons },
+    components: { StatusIcons, Typing },
     props: {
         conversation: {
             type: Object,
@@ -123,29 +133,31 @@ export default {
     max-width: 100%;
 }
 
-.conversation-message-block {
-    display: block;
-    max-width: 95%;
-    width: max-content;
-    white-space: nowrap;
+.not-typing {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) minmax(0, max-content) minmax(0, max-content);
+    grid-template-rows: 1fr;
+    grid-template-areas: "chat-name conversation-attachments conversation-message";
 }
 
-.conversation-message {
-    display: inline-block;
-    width: max-content;
-    max-width: 100%;
+.not-typing span { margin-right: 5px; }
+
+.chat-name {
+    grid-area: chat-name;
+    color: #ccc;
 }
 
 .conversation-attachments {
-    display: inline-block;
+    grid-area: conversation-attachments;
     color: rgb(91, 169, 233);
-    max-width: 100;
+    max-width: 100%;
     width: max-content;
 }
 
-.chat-name {
-    display: inline-block;
-    color: #ccc;
+.conversation-message {
+    grid-area: conversation-message;
+    width: max-content;
+    max-width: 100%;
 }
 
 .message-body {
@@ -157,12 +169,6 @@ export default {
 .conversation-attachment {
     color: #0d99de;
     display: inline;
-}
-
-.conversation span {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
 }
 
 .conversation-time {

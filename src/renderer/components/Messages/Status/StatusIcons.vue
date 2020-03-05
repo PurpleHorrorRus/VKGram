@@ -38,8 +38,12 @@ export default {
 
 <style scoped>
 .status { 
-    display: inline-block; 
-    vertical-align: middle; 
+    display: inline-block;
+    margin-left: 5px;
+}
+.status.conversation-status {
+    display: inline;
+    margin-left: 0px;
 }
 i { font-size: 9pt; }
 .online { color: rgb(128, 255, 185); }

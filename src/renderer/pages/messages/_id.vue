@@ -9,9 +9,12 @@
             </div>
             <div id="title-container">
                 <span id="messages-title" v-text="current.conversation.title" />
-                <div v-if="current.conversation.last_seen" id="last-seen">
-                    <Status :lastSeen="last_seen" />
+                <div v-if="!current.conversation.typing" id="status-top">
+                    <div v-if="current.conversation.last_seen" id="last-seen">
+                        <Status :lastSeen="last_seen" />
+                    </div>
                 </div>
+                <Typing v-else />
             </div>
         </div>
         <div id="messages-main" ref="msgs">
@@ -52,6 +55,7 @@ import { writeFileSync, unlinkSync } from "fs";
 import { clipboard } from "electron";
 
 import Status from "~/components/Messages/Status/Status";
+import Typing from "~/components/Misc/Typing";
 import Message from "~/components/Messages/Message";
 import Input from "~/components/Messages/Input";
 import StickersPicker from "~/components/Messages/StickersPicker";
@@ -62,7 +66,7 @@ import misc from "~/assets/misc";
 
 export default {
     layout: "messages",
-    components: { Status, Message, Input, StickersPicker, StickersBlock },
+    components: { Status, Typing, Message, Input, StickersPicker, StickersBlock },
     async asyncData ({ store, route }) {
         const { id } = route.params;
 
@@ -79,8 +83,10 @@ export default {
         }
 
         store.commit("messages/SetCurrent", id);
+        store.dispatch("messages/MarkAsRead", id);
 
         return { 
+            id,
             loading_messages: false, 
             stickers: false, 
             screenshots: [], 
@@ -103,17 +109,25 @@ export default {
         "current.messages": function (newVal) {
             const { out } = newVal[newVal.length - 1];
             if (out === 1) return this.ScrollToEnd(true);
+            else {
+                const scrollY = this.$refs.msgs.scrollTop;
+                const height = this.$refs.msgs.clientHeight;
+                const _h = this.$refs.msgs.scrollHeight;
+                if (scrollY + height === _h) this.ScrollToEnd(true);
+                return this.MarkAsRead(this.id);
+            }
         }
     },
     updated () { return this.$nextTick(() => this.ScrollToEnd()); },
-    mounted () { 
+    mounted () {
         this.ScrollToEnd(true);
         return this.$refs.msgs.addEventListener("scroll", this.HandleScroll); 
     },
     methods: {
         ...mapActions({
             AddMessage: "messages/AddMessage",
-            Cache: "messages/Cache"
+            Cache: "messages/Cache",
+            MarkAsRead: "messages/MarkAsRead"
         }),
         Profile (from_id) {
             const { profiles } = this.current;
@@ -155,9 +169,10 @@ export default {
             if (!message && !this.screenshots.length) return;
             const random_id = misc.GetRandom(100000, 999999);
             const { conversation } = this.current;
-            const { id } = conversation;   
+            const { id, type } = conversation;   
+            const _t = type === "user" || type === "chat";
             let to_send = {
-                peer_id: id,
+                peer_id: _t ? id : -id,
                 random_id,
                 message
             };
@@ -239,12 +254,12 @@ export default {
 
 #back-container {
     grid-area: back-container;
-    padding: 10px;
+    margin: auto;
 }
 
 #avatar-container {
     grid-area: avatar-container;
-    padding: 3px;
+    margin: auto;
     user-select: none;
 }
 
@@ -256,14 +271,19 @@ export default {
 
 #title-container {
     grid-area: title-container;
-    padding-top: 10px;
     user-select: none;
+    margin-top: 7px;
+    margin-left: 5px;
+}
+
+#status-top {
+    display: inline-block;
+    vertical-align: middle;
 }
 
 #messages-title { vertical-align: middle; }
 #last-seen { 
-    display: inline-block;  
-    margin-left: 5px;
+    display: inline-block;
     vertical-align: middle;
 }
 
@@ -275,7 +295,6 @@ export default {
     overflow-x: hidden;
     z-index: 0;
     padding: 5px;
-    height: 100%;
 }
 
 #screenshots-container {

@@ -22,6 +22,7 @@ export default {
             if (~ConversationIndex) {
                 const build: ConversationMessageType = c_scripts.BuildConversationMessage(item);
                 state.conversations[ConversationIndex].message = build;
+                state.conversations[ConversationIndex].typing = false;
             }
         },
         SetOnline (state, { id, platform }) {
@@ -50,16 +51,28 @@ export default {
             const ConversationIndex = state.conversations.findIndex(c => c.id === id);
             if (~ConversationIndex) state.conversations[ConversationIndex].unread_count++;
         },
+        RemoveUnread (state, id: number) {
+            const ConversationIndex = state.conversations.findIndex(c => c.id === id);
+            if (~ConversationIndex) state.conversations[ConversationIndex].unread_count = 0;
+        },
         Read (state, id: number) {
             const ConversationIndex = state.conversations.findIndex(c => c.id === id);
             if (~ConversationIndex) {
                 state.conversations[ConversationIndex].message.read_state = true;
-                console.log("User has read a message", state.conversations[ConversationIndex]);
+                console.log("User / Group has read a message", state.conversations[ConversationIndex]);
             }
         },
         Move (state, id) {
             const ConversationIndex = state.conversations.findIndex(c => c.id === id);
             if (~ConversationIndex) state.conversations = misc.ArrayMove(state.conversations, ConversationIndex, 0);
+        },
+        Typing (state, id) {
+            const ConversationIndex = state.conversations.findIndex(c => c.id === id);
+            if (~ConversationIndex) {
+                state.conversations[ConversationIndex].typing = true;
+                setTimeout(() => state.conversations[ConversationIndex].typing = false, 5 * 1000);
+                console.log("User / Group is typing...", state.conversations[ConversationIndex]);
+            }
         }
     },
     actions: {
@@ -68,7 +81,7 @@ export default {
                 const vk = this.getters["vk/GetVK"];
                 if (vk) {
                     const { vkr: response } = await vk.call("messages.getConversations", { extended: 1 });
-                    const { items, groups, profiles } = response; 
+                    const { items, groups, profiles } = response;
                     const conversations = c_scripts.BuildConversations(items, groups, profiles);
                     commit("SetConversations", conversations);
                     return resolve(conversations);
