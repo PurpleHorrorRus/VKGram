@@ -13,7 +13,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import { mapGetters } from "vuex";
 
 export default {
@@ -37,7 +37,7 @@ export default {
                     if (this.loading) return;
                     e.preventDefault();
 
-                    const message: string = this.value.trim();
+                    const message = this.value.trim();
                     this.value = "";
 
                     return this.$emit("send", message);

@@ -9,7 +9,7 @@
     </div>
 </template>
 
-<script lang="ts">
+<script>
 import Titlebar from "~/components/Titlebar/Titlebar";
 
 export default {
