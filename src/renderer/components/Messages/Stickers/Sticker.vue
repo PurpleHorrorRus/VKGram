@@ -50,13 +50,16 @@ export default {
             const { graffiti } = response;
             const field = `graffiti${this.vk.session.user_id}_${graffiti.id}`;
 
-            const { id } = this.current_conversation.conversation;
+            const { id, type } = this.current_conversation.conversation;
             const random_id = misc.GetRandom(100000, 999999);
-            await this.vk.post("messages.send", {
+            const _t = type === "user" || type === "chat";
+            
+            const to_send = {
+                peer_id: _t ? id : -id,
                 random_id,
-                peer_id: id,
                 attachment: field
-            }); 
+            };
+            await this.vk.post("messages.send", to_send); 
 
             return this.vk.call("docs.delete", {
                 owner_id: this.vk.session.user_id,

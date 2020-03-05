@@ -134,7 +134,7 @@ export default {
     position: absolute;
     bottom: 10%;
     right: 15px;
-    width: 78%;
+    width: 85%;
     height: 70%;
     border-radius: 10px;
     background: #0e0e0e;
@@ -142,6 +142,7 @@ export default {
 
 #stickers { 
     grid-area: stickers;
+    position: relative;
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
