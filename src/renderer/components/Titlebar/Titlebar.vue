@@ -37,6 +37,27 @@ const platform = process.platform;
 
 export default {
     data: () => ({ maximized: false }),
+    computed: {
+        ...mapGetters({
+            settings: "settings/getSettings"
+        }),
+        close_button () { 
+            if (platform === "linux") return close;
+            else return captionButtons + "#close";
+        },
+        minimize_button () { 
+            if (platform === "linux") return minimize;
+            else return captionButtons + "#minimize";
+        },
+        maximize_button () { 
+            if (platform === "linux") return maximize;
+            else return captionButtons + "#maximize";
+        },
+        restore_button () { 
+            if (platform === "linux") return restore;
+            else return captionButtons + "#restore";
+        }
+    },
     created () {
         const win = require("electron").remote.getCurrentWindow();
         win.on("maximize", () => this.maximized = true);
@@ -46,27 +67,6 @@ export default {
         for (const elem of document.querySelectorAll("#electron-titlebar > .button")) {
             elem.addEventListener("mouseover", () => elem.classList.add("hover"));
             elem.addEventListener("mouseout", () => elem.classList.remove("hover"));
-        }
-    },
-    computed: {
-        ...mapGetters({
-            settings: "settings/getSettings"
-        }),
-        close_button () { 
-            if (platform == "linux") return close;
-            else return captionButtons + "#close";
-        },
-        minimize_button () { 
-            if (platform == "linux") return minimize;
-            else return captionButtons + "#minimize";
-        },
-        maximize_button () { 
-            if (platform == "linux") return maximize;
-            else return captionButtons + "#maximize";
-        },
-        restore_button () { 
-            if (platform == "linux") return restore;
-            else return captionButtons + "#restore";
         }
     },
     methods: {
@@ -275,8 +275,10 @@ html[electron-titlebar-platform=win32] #electron-titlebar > .button img {
     margin-left: 16.5px;
 }
 
-html[electron-titlebar-platform=win32] #electron-titlebar > .button-close.hover img, html[electron-titlebar-platform=win32] #electron-titlebar > .button-close:active img {
-    -webkit-filter: invert(100%);
+html[electron-titlebar-platform=win32] #electron-titlebar > 
+    .button-close.hover img, html[electron-titlebar-platform=win32] #electron-titlebar > 
+        .button-close:active img {
+            filter: invert(100%);
 }
 
 html[electron-titlebar-platform=win32] #electron-titlebar > .button-maximize {
