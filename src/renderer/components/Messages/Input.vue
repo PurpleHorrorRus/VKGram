@@ -28,6 +28,7 @@ export default {
             vk: "vk/GetVK"
         })
     },
+    mounted () { return this.$refs.input.$el.focus(); },
     methods: {
         press (e) {
             const { keyCode } = e;
