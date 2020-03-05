@@ -1,13 +1,24 @@
 <template>
     <div id="search">
         <i id="search-icon" class="fas fa-search" />
-        <input placeholder="Поиск" id="search-input" type="text">
+        <input 
+            id="search-input" 
+            v-model="q"
+            placeholder="Поиск" 
+            type="text" 
+            @keypress.enter="Search"
+        >
     </div>
 </template>
 
 <script>
 export default {
-
+    data: () => ({
+        q: ""
+    }),
+    methods: {
+        Search () { return this.$router.replace(`/search/${this.q}`); }
+    }
 };
 </script>
 
@@ -36,7 +47,7 @@ export default {
     border-radius: 5px;
     border: none;
     outline: none;
-    padding-left: 7%;
+    padding-left: 30px;
     padding-right: 5px;
     font-size: 9pt;
 }
