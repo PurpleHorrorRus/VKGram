@@ -24,6 +24,11 @@ export default {
                 state.messages[id].profiles = profiles.concat(build.profiles);
             } else state.messages[id] = build;
         },
+        Clear (state, id: number) {
+            if (state.messages[id]) {
+                delete state.messages[id];
+            }
+        },
         SetCurrent (state, id: number) {
             if (state.messages[id]) {
                 state.current = state.messages[id];
@@ -98,6 +103,7 @@ export default {
                 return resolve();
             });
         },
+        Clear ({ commit }, id) { return commit("Clear", id); },
         async MarkAsRead ({ getters, rootGetters }, id: number) {
             const { messages } = getters.Current;
             const { length } = messages;

@@ -12,6 +12,7 @@ export default {
             : this.BuildGroup(object);
 
         return Object.assign(conversation, {
+            last_message_id: conversations.last_message_id,
             out_read: conversations.out_read,
             in_read: conversations.in_read
         });
@@ -36,7 +37,7 @@ export default {
             title,
             typing: false,
             type: "group",
-            photo 
+            photo
         };
     },
     BuildMessage (item: any, out_read: number = 0, in_read: number = 0): MessageType {
@@ -68,7 +69,7 @@ export default {
         const draft: string = "";
 
         const conversations = history.conversations[0];
-        const { chat_settings, peer, in_read, out_read } = conversations;
+        const { chat_settings, peer, last_message_id, in_read, out_read } = conversations;
         const { id } = peer;
 
         if (chat_settings) {
@@ -80,8 +81,9 @@ export default {
                 type: "chat",
                 typing: false,
                 photo, 
+                last_message_id,
                 in_read, 
-                out_read 
+                out_read
             };
         }
 
