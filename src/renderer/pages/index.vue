@@ -2,7 +2,7 @@
     <div id="index-page">
         <div class="header">
             <Search />
-            <i id="settings-icon" class="fas fa-cog" />
+            <i id="settings-icon" class="fas fa-cog" @click="openSettings" />
         </div>
         <div class="conversations">
             <Conversation 
@@ -39,7 +39,8 @@ export default {
             auth: "vk/auth",
             load: "conversations/Load",
             cache: "stickers/Cache"
-        })
+        }),
+        openSettings () { return this.$router.replace("/settings/"); }
     }
 };
 </script>
