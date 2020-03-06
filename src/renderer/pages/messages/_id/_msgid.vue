@@ -17,7 +17,7 @@
                 <Typing v-else />
             </div>
         </div>
-        <div id="messages-main" ref="msgs">
+        <div id="messages-main" ref="msgs" @wheel="HandleScroll">
             <Message 
                 v-for="message of current.messages" 
                 :key="message.id" 
@@ -41,7 +41,7 @@
             />
             <StickersPicker @turn="turnStickers" />
         </div>
-        <div v-else id="input-container">
+        <div v-else id="history">
             <span v-text="'Вы находитесь в режиме просмотра истории сообщений'" />
         </div>
         <transition name="fade">
@@ -131,14 +131,12 @@ export default {
         }
     },
     updated () { return this.$nextTick(() => this.ScrollToEnd()); },
-    mounted () {
-        this.ScrollToEnd(true);
-        return this.$refs.msgs.addEventListener("scroll", this.HandleScroll); 
-    },
+    mounted () { this.ScrollToEnd(true); },
     methods: {
         ...mapActions({
             AddMessage: "messages/AddMessage",
             Cache: "messages/Cache",
+            Clear: "messages/Clear",
             MarkAsRead: "messages/MarkAsRead"
         }),
         Profile (from_id) {
@@ -195,23 +193,22 @@ export default {
             }
             this.vk.post("messages.send", to_send); 
         },
-        Back () { return this.$router.replace("/"); },
+        Back () {
+            if (this.isHistory) this.Clear(this.id);
+            return this.$router.back();
+        },
         turnStickers () { return this.stickers = true; },
         async LoadMore () {
+            if (this.loading_messages) return;
             this.loading_messages = true;
 
             const { length: offset } = this.current.messages; 
             const { id } = this.current.conversation;
 
-            let params = { };
+            let params = { user_id: id, extended: 1, fields: "photo_50" };
             if (this.isHistory) {
-                params = { 
-                    user_id: id, 
-                    start_message_id: this.current.messages[0].id, 
-                    extended: 1, 
-                    fields: "photo_50" 
-                };
-            } else params = { user_id: id, offset, extended: 1, fields: "photo_50" };
+                params = Object.assign(params, { start_message_id: this.current.messages[0].id });
+            } else params = Object.assign(params, { offset });
             let { vkr: history } = await this.vk.post("messages.getHistory", params);
             history = JSON.parse(JSON.stringify(history));
             
@@ -346,5 +343,13 @@ export default {
     grid-template-rows: 1fr;
     grid-template-areas: "input sticker-picker";
     border-top: 1px solid rgb(92, 92, 92);
+}
+
+#history span {
+    display: block;
+    margin: auto;
+    text-align: center;
+    border-top: 1px solid rgb(92, 92, 92);
+    padding-top: 10px;
 }
 </style>
