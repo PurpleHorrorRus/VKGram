@@ -142,8 +142,8 @@ export default {
 
 #stickers { 
     grid-area: stickers;
-    position: relative;
     width: 100%;
+    height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
     padding-left: 10px;
@@ -158,7 +158,7 @@ export default {
     background: rgba(0, 0, 0, 0.7);
     padding: 10px;
     width: 100%;
-    height: 100%;
+    height: 79%;
     user-select: none;
     pointer-events: none;
 }

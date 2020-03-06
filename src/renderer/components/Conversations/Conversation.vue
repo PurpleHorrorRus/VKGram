@@ -183,7 +183,7 @@ export default {
 .conversation-time {
     display: block; 
     text-align: right;
-    font-size: 9pt; 
+    font-size: 9pt;     
 }
 
 .conversation-unread {
