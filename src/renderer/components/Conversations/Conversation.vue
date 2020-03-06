@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 import StatusIcons from "~/components/Messages/Status/StatusIcons";
 import Typing from "~/components/Misc/Typing";
 import misc from "~/assets/misc";
@@ -58,6 +59,10 @@ export default {
         }
     },
     computed: {
+        ...mapGetters({
+            Mode: "vk/GetMode"
+        }),
+        isHistory () { return this.Mode === "history"; },
         isUnread () { return this.isUnreadIn || this.isUnreadOut; },
         isUnreadIn () { return this.conversation.unread_count !== 0; },
         isUnreadOut () { 
@@ -71,7 +76,11 @@ export default {
     methods: {
         open () {
             const { id } = this.conversation;
-            this.$router.replace(`/messages/${id}`);
+            if (!this.isHistory) {
+                return this.$router.push(`/messages/${id}/-1`);
+            } else {
+                return this.$router.push(`/messages/${id}/${this.conversation.message.id}`);
+            }
         }
     }
 };

@@ -12,11 +12,13 @@ function ReadJSON (dir: string) {
 interface StateInterface {
     vk: any | null
     longpoll: Object | null
+    mode: string
 };
 
 const state: StateInterface = {
     vk: null,
-    longpoll: null
+    longpoll: null,
+    mode: "normal"
 };
 
 export default {
@@ -24,7 +26,8 @@ export default {
     state,
     mutations: {
         SetVK (state, vk: object) { state.vk = vk; },
-        SetLongPoll (state, longpoll: object) { state.longpoll = longpoll; }
+        SetLongPoll (state, longpoll: object) { state.longpoll = longpoll; },
+        SetMode (state, mode) { state.mode = mode; }
     },
     actions: {
         auth: ({ commit, dispatch }) => {
@@ -119,10 +122,12 @@ export default {
                     return resolve(longpoll);
                 } else return reject(new Error("VK is null"));
             });
-        }
+        },
+        SetMode ({ commit }, mode) { return commit("SetMode", mode); }
     },
     getters: { 
         GetVK: () => state.vk,
-        GetID: () => state.vk.session.user_id
+        GetID: () => state.vk.session.user_id,
+        GetMode: () => state.mode
     }
 };

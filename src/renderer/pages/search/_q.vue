@@ -17,7 +17,7 @@
 <script>
 import Search from "~/components/Misc/Search";
 import Conversation from "~/components/Conversations/Conversation";
-import m_scripts from "~/assets/conversations";
+import c_scripts from "~/assets/conversations";
 
 export default {
     components: { Search, Conversation },
@@ -36,12 +36,14 @@ export default {
                 last_message: item
             }];
         }
+
+        store.commit("vk/SetMode", "history");
         
-        const build = m_scripts.BuildConversations(_сonversations, groups, profiles);
+        const build = c_scripts.BuildConversations(_сonversations, groups, profiles);
         return { conversations: build };
     },
     methods: {
-        Back () { return this.$router.replace("/"); }
+        Back () { return this.$router.back(); }
     }
 };
 </script>

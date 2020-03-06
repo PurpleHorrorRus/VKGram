@@ -34,12 +34,15 @@
                 @click="RemoveScreenshot(index)"
             >
         </div>
-        <div id="input-container">
+        <div v-if="!isHistory" id="input-container">
             <Input 
                 @send="Send"
                 @AddScreenshot="AddScreenshot"
             />
             <StickersPicker @turn="turnStickers" />
+        </div>
+        <div v-else id="input-container">
+            <span v-text="'Вы находитесь в режиме просмотра истории сообщений'" />
         </div>
         <transition name="fade">
             <StickersBlock 
@@ -68,22 +71,29 @@ export default {
     layout: "messages",
     components: { Status, Typing, Message, Input, StickersPicker, StickersBlock },
     async asyncData ({ store, route }) {
-        const { id } = route.params;
+        const { id, msgid } = route.params;
 
         const messages = store.getters["messages/Get"];
         if (!messages[id]) {
             const vk = store.getters["vk/GetVK"];
-            let { vkr: history } = await vk.call("messages.getHistory", { 
-                peer_id: id,
+
+            let to_get = { 
+                peer_id: Number(id),
                 fields: "photo_50,online,last_seen",
                 extended: 1
-            });
+            };
+
+            if (~msgid) to_get = Object.assign(to_get, { start_message_id: Number(msgid) });
+            
+            let { vkr: history } = await vk.call("messages.getHistory", to_get);
             history = JSON.parse(JSON.stringify(history));
             await store.dispatch("messages/Cache", { id, history });
         }
 
         store.commit("messages/SetCurrent", id);
         store.dispatch("messages/MarkAsRead", id);
+
+        if (~msgid) store.commit("vk/SetMode", "history");
 
         return { 
             id,
@@ -96,8 +106,10 @@ export default {
     computed: {
         ...mapGetters({
             vk: "vk/GetVK",
+            mode: "vk/GetMode",
             current: "messages/Current"
         }),
+        isHistory () { return this.mode === "history"; },
         last_seen () {
             const { time } = this.current.conversation.last_seen;
             const platform = this.current.conversation.last_seen.platform || this.current.conversation.online_mobile;
@@ -191,9 +203,19 @@ export default {
             const { length: offset } = this.current.messages; 
             const { id } = this.current.conversation;
 
-            const params = { user_id: id, offset, extended: 1, fields: "photo_50" };
+            let params = { };
+            if (this.isHistory) {
+                params = { 
+                    user_id: id, 
+                    start_message_id: this.current.messages[0].id, 
+                    extended: 1, 
+                    fields: "photo_50" 
+                };
+            } else params = { user_id: id, offset, extended: 1, fields: "photo_50" };
             let { vkr: history } = await this.vk.post("messages.getHistory", params);
             history = JSON.parse(JSON.stringify(history));
+            
+            if (this.isHistory) history.items.splice(0, 1);
 
             this.Cache({ id, history });
 

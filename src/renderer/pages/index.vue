@@ -28,6 +28,7 @@ export default {
         })
     },
     async mounted () {
+        this.SetMode("normal");
         if (!this.vk) {
             await this.auth();
             this.cache();
@@ -37,10 +38,11 @@ export default {
     methods: {
         ...mapActions({
             auth: "vk/auth",
+            SetMode: "vk/SetMode",
             load: "conversations/Load",
             cache: "stickers/Cache"
         }),
-        openSettings () { return this.$router.replace("/settings/"); }
+        openSettings () { return this.$router.push("/settings/"); }
     }
 };
 </script>

@@ -17,7 +17,7 @@ export default {
         q: ""
     }),
     methods: {
-        Search () { return this.$router.replace(`/search/${this.q}`); }
+        Search () { return this.$router.push(`/search/${this.q}`); }
     }
 };
 </script>
